@@ -47,8 +47,42 @@ test('Create an empty board', () => {
   })).toBe(true);
 });
 
-test('Place a 1 length ship on a board', () => {
+test('Place a 1 length ship on the board', () => {
   let testBoard = Gameboard();
-  testBoard.place(3, 1, Ship(1));
+  testBoard.place(3, 1, Ship(1), true);
   expect(testBoard.board[13]).toBe(0);
+});
+
+test('Place a 3 length ship on the board', () => {
+  let testBoard = Gameboard();
+  testBoard.place(3, 1, Ship(3), true);
+  expect(testBoard.board[13]).toBe(0);
+  expect(testBoard.board[14]).toBe(0);
+  expect(testBoard.board[15]).toBe(0);
+  expect(testBoard.board[16]).toBe(null);
+});
+
+test('Place a 3 length ship vertically on the board', () => {
+  let testBoard = Gameboard();
+  testBoard.place(3, 1, Ship(3), false);
+  expect(testBoard.board[13]).toBe(0);
+  expect(testBoard.board[23]).toBe(0);
+  expect(testBoard.board[33]).toBe(0);
+  expect(testBoard.board[43]).toBe(null);
+});
+
+test('Dont allow illegal placement on horizontal ships', () => {
+  let testBoard = Gameboard();
+  testBoard.place(8, 1, Ship(3), true);
+  expect(testBoard.board.every((square) => {
+    return square === null
+  })).toBe(true);
+});
+
+test('Dont allow illegal placement on vertical ships', () => {
+  let testBoard = Gameboard();
+  testBoard.place(1, 8, Ship(3), false);
+  expect(testBoard.board.every((square) => {
+    return square === null
+  })).toBe(true);
 });

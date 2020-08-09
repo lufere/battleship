@@ -16,13 +16,20 @@ const Gameboard = () => {
   let board = Array(100).fill(null);
   let index = 0;
   let ships = [];
-  const place = (x, y, ship) => {
+  
+  const place = (x, y, ship, horizontal) => {
+    let available;
     ships[index] = ship;
     let pos = x + (y * 10);
+    horizontal ? available = 10-x : available = 10-y;
     for (let i = 0; i < ship.length; i++) {
-      board.splice(pos+i, 1, index);
+      if(horizontal === true && available >= ship.length){
+        board.splice(pos + i, 1, index);
+      }
+      if(horizontal === false && available >= ship.length){
+        board.splice(pos + (i*10), 1, index);
+      }
     }
-    index++;
   }
 
   return{place, board}
