@@ -1,4 +1,7 @@
-const Ship = require('./battleship');
+const battleship = require('./battleship');
+
+const Ship = battleship.Ship;
+const Gameboard = battleship.Gameboard;
 
 test('Create ships with the correct length', () => {
   expect(Ship(1).length).toBe(1);
@@ -37,7 +40,15 @@ test('Ship is sunk after every position is hit', () => {
   expect(testShip.isSunk()).toBe(true);
 });
 
+test('Create an empty board', () => {
+  let testBoard = Gameboard();
+  expect(testBoard.board.every((square) => {
+    return square === null
+  })).toBe(true);
+});
 
-
-
-
+test('Place a 1 length ship on a board', () => {
+  let testBoard = Gameboard();
+  testBoard.place(3, 1, Ship(1));
+  expect(testBoard.board[13]).toBe(0);
+});
