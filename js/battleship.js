@@ -17,6 +17,11 @@ const Gameboard = () => {
   let index = 0;
   let ships = [];
   
+  const getBoard = () => {
+    let publicBoard = board.slice();
+    return publicBoard
+  }
+
   const place = (x, y, ship, horizontal) => {
     let available;
     ships[index] = ship;
@@ -38,8 +43,16 @@ const Gameboard = () => {
     }
   }
 
-  return{place, board}
+
+  return{place, getBoard, receiveAttack}
 }
+
+let testBoard = Gameboard();
+testBoard.getBoard()[0] = 1;
+let truth = testBoard.getBoard().every((square) => {
+  return square === null
+})
+console.log(truth);
 
 module.exports = {
   Ship:Ship,
