@@ -43,16 +43,36 @@ const Gameboard = () => {
     }
   }
 
+  const receiveAttack = (x, y) => {
+    let pos = x + (y * 10);
+    if (board[pos] != null && typeof parseFloat(board[pos]) === "number"){
+      let id = board[pos].split(".");
+      shipNum = parseInt(id[0]);
+      shipPos = parseInt(id[1]);
+      ships[shipNum].hit(shipPos);
+      board.splice(pos, 1, "h");
+    }
+    if(board[pos] === null) board.splice(pos, 1, "m");
+  }
 
-  return{place, getBoard, receiveAttack}
+  const allSunk = () => {
+    let shipsDown = ships.map((ship) => {
+      return ship.isSunk()
+    });
+    return shipsDown.every((ship) => {
+      return ship === true
+    });
+  }
+
+  return{place, getBoard, receiveAttack, allSunk}
 }
 
-let testBoard = Gameboard();
-testBoard.getBoard()[0] = 1;
-let truth = testBoard.getBoard().every((square) => {
-  return square === null
-})
-console.log(truth);
+// let testBoard = Gameboard();
+// testBoard.getBoard()[0] = 1;
+// let truth = testBoard.getBoard().every((square) => {
+//   return square === null
+// });
+// console.log(truth);
 
 module.exports = {
   Ship:Ship,
