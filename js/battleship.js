@@ -67,6 +67,29 @@ const Gameboard = () => {
   return{place, getBoard, receiveAttack, allSunk}
 }
 
+const Player = (gameboard) => {
+  const attack = (player, x, y) => {
+    if(Game.userTurn == true){
+      player.receiveAttack(x, y);
+    }
+  }
+
+  const receiveAttack = (x, y) => {
+    gameboard.receiveAttack(x, y);
+  }
+
+  return{attack, receiveAttack, gameboard}
+}
+
+// const Game = (() => {
+//   let userTurn = true;
+//   let player1 =  Player(Gameboard());
+//   let CPU = Player(Gameboard());
+
+//   return{userTurn}
+// })()
+
+
 // let testBoard = Gameboard();
 // testBoard.getBoard()[0] = 1;
 // let truth = testBoard.getBoard().every((square) => {
@@ -76,5 +99,6 @@ const Gameboard = () => {
 
 module.exports = {
   Ship:Ship,
-  Gameboard:Gameboard
+  Gameboard:Gameboard,
+  Player:Player
 };

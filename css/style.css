@@ -1,0 +1,10 @@
+#game{
+    height: 100%;
+    width: 100%;
+}
+
+#test{
+    height: 200px;
+    width: 200px;
+    background-color: black;
+}
