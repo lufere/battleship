@@ -1,3 +1,7 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
 #game{
     height: 100%;
     width: 100%;
@@ -21,4 +25,34 @@
 	cursor: pointer;
     outline: inherit;
     font-size: 10px;
+}
+
+.gridContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;   
+    border: 3px solid black;
+    width: auto;
+    display: inline-block;
+}
+
+.gridContainer > div{
+    display: flex;
+}
+
+.water{
+    background-color: lightskyblue;
+}
+
+.healthyShip{
+    background-color: lightslategray;
+}
+
+.miss{
+    background-color: black;
+}
+
+.hitShip{
+    background-color: orangered;
 }

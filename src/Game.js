@@ -10,7 +10,8 @@ class Game extends React.Component{
     let CPU = Player(Gameboard());
     player1.gameboard.place(0,0,Ship(3),true);
     player1.gameboard.place(2,2,Ship(4),false);
-    player1.gameboard.receiveAttack(2,2);
+    player1.gameboard.receiveAttack(2,3);
+    player1.gameboard.receiveAttack(4,2);
         super(props);
         this.state = {
             userTurn: true,
@@ -19,7 +20,6 @@ class Game extends React.Component{
     }
 
     render(){
-
         return(
             <Grid
                 board = {this.state.playerGrid}
@@ -28,12 +28,28 @@ class Game extends React.Component{
     }
 }
 
+function Square(props) {
+    return (
+      <button 
+      className={["square", props.squareClass].join(" ")}
+      onClick={props.onClick}>
+        {/* {props.value} */}
+      </button>
+    );
+}
+
 class Grid extends React.Component{
     renderSquare(i) {
+        let squareClass = "water";
+        if (this.props.board[i] != null && typeof parseFloat(this.props.board[i]) === "number") squareClass = "healthyShip";
+        if (this.props.board[i] == "m") squareClass = "miss";
+        if (this.props.board[i] == "h") squareClass = "hitShip";
         return (
           <Square
+            squareClass={squareClass}
             value={this.props.board[i]}
             onClick={() => this.props.onClick(i)}
+            key = {i}
           />
         );
     }
@@ -48,7 +64,7 @@ class Grid extends React.Component{
 
     render(){
         return(
-            <div>
+            <div className="gridContainer">
                 <div className="row">
                     {this.createrRow(0)}
                 </div>
@@ -83,14 +99,6 @@ class Grid extends React.Component{
         );
     }
 }
-
-function Square(props) {
-    return (
-      <button className="square" onClick={props.onClick}>
-        {props.value}
-      </button>
-    );
-  }
 
 let domContainer = document.querySelector('#game');
 ReactDOM.render(<Game/>, domContainer);

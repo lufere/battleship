@@ -22,7 +22,8 @@ var Game = function (_React$Component) {
         var CPU = Player(Gameboard());
         player1.gameboard.place(0, 0, Ship(3), true);
         player1.gameboard.place(2, 2, Ship(4), false);
-        player1.gameboard.receiveAttack(2, 2);
+        player1.gameboard.receiveAttack(2, 3);
+        player1.gameboard.receiveAttack(4, 2);
 
         var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
@@ -36,7 +37,6 @@ var Game = function (_React$Component) {
     _createClass(Game, [{
         key: "render",
         value: function render() {
-
             return React.createElement(Grid, {
                 board: this.state.playerGrid
             });
@@ -45,6 +45,12 @@ var Game = function (_React$Component) {
 
     return Game;
 }(React.Component);
+
+function Square(props) {
+    return React.createElement("button", {
+        className: ["square", props.squareClass].join(" "),
+        onClick: props.onClick });
+}
 
 var Grid = function (_React$Component2) {
     _inherits(Grid, _React$Component2);
@@ -60,11 +66,17 @@ var Grid = function (_React$Component2) {
         value: function renderSquare(i) {
             var _this3 = this;
 
+            var squareClass = "water";
+            if (this.props.board[i] != null && typeof parseFloat(this.props.board[i]) === "number") squareClass = "healthyShip";
+            if (this.props.board[i] == "m") squareClass = "miss";
+            if (this.props.board[i] == "h") squareClass = "hitShip";
             return React.createElement(Square, {
+                squareClass: squareClass,
                 value: this.props.board[i],
                 onClick: function onClick() {
                     return _this3.props.onClick(i);
-                }
+                },
+                key: i
             });
         }
     }, {
@@ -81,7 +93,7 @@ var Grid = function (_React$Component2) {
         value: function render() {
             return React.createElement(
                 "div",
-                null,
+                { className: "gridContainer" },
                 React.createElement(
                     "div",
                     { className: "row" },
@@ -138,14 +150,6 @@ var Grid = function (_React$Component2) {
 
     return Grid;
 }(React.Component);
-
-function Square(props) {
-    return React.createElement(
-        "button",
-        { className: "square", onClick: props.onClick },
-        props.value
-    );
-}
 
 var domContainer = document.querySelector('#game');
 ReactDOM.render(React.createElement(Game, null), domContainer);

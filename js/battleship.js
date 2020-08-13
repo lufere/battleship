@@ -13,7 +13,7 @@ const Ship = (inputLength) => {
 }
 
 const Gameboard = () => {
-  let board = Array(100).fill("null");
+  let board = Array(100).fill(null);
   let index = 0;
   let ships = [];
   
