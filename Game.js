@@ -6,27 +6,26 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// const battleship = require('./battleship');
-
-// const Ship = battleship.Ship;
-// const Gameboard = battleship.Gameboard;
-// const Player = battleship.Player;
-
 var Game = function (_React$Component) {
     _inherits(Game, _React$Component);
 
     function Game(props) {
         _classCallCheck(this, Game);
 
+        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
+
         var player1 = Player(Gameboard());
         var CPU = Player(Gameboard());
         player1.gameboard.place(0, 0, Ship(3), true);
         player1.gameboard.place(2, 2, Ship(4), false);
-        player1.gameboard.receiveAttack(2, 3);
-        player1.gameboard.receiveAttack(4, 2);
-
-        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
-
+        player1.gameboard.place(6, 1, Ship(4), false);
+        player1.gameboard.place(4, 7, Ship(4), true);
+        // player1.gameboard.receiveAttack(2,3);
+        // player1.gameboard.receiveAttack(4,2);
+        _this.receiveAttack = player1.gameboard.receiveAttack.bind(_this);
+        _this.getBoard = player1.gameboard.getBoard.bind(_this);
+        _this.handleClick = _this.handleClick.bind(_this);
+        // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
             playerGrid: player1.gameboard.getBoard()
@@ -35,10 +34,19 @@ var Game = function (_React$Component) {
     }
 
     _createClass(Game, [{
+        key: "handleClick",
+        value: function handleClick(x, y) {
+            this.receiveAttack(x, y);
+            this.setState({
+                playerGrid: this.getBoard()
+            });
+        }
+    }, {
         key: "render",
         value: function render() {
             return React.createElement(Grid, {
-                board: this.state.playerGrid
+                board: this.state.playerGrid,
+                onClick: this.handleClick
             });
         }
     }]);
@@ -67,21 +75,23 @@ var Grid = function (_React$Component2) {
             var _this3 = this;
 
             var squareClass = "water";
-            if (this.props.board[i] != null && typeof parseFloat(this.props.board[i]) === "number") squareClass = "healthyShip";
+            if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "healthyShip";
             if (this.props.board[i] == "m") squareClass = "miss";
             if (this.props.board[i] == "h") squareClass = "hitShip";
+            var x = i % 10;
+            var y = (i - x) / 10;
             return React.createElement(Square, {
                 squareClass: squareClass,
                 value: this.props.board[i],
                 onClick: function onClick() {
-                    return _this3.props.onClick(i);
+                    return _this3.props.onClick(x, y);
                 },
                 key: i
             });
         }
     }, {
-        key: "createrRow",
-        value: function createrRow(row) {
+        key: "createRow",
+        value: function createRow(row) {
             var rowArray = [];
             for (var i = row * 10; i < 10 + row * 10; i++) {
                 rowArray.push(this.renderSquare(i));
@@ -97,52 +107,52 @@ var Grid = function (_React$Component2) {
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(0)
+                    this.createRow(0)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(1)
+                    this.createRow(1)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(2)
+                    this.createRow(2)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(3)
+                    this.createRow(3)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(4)
+                    this.createRow(4)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(5)
+                    this.createRow(5)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(6)
+                    this.createRow(6)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(7)
+                    this.createRow(7)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(8)
+                    this.createRow(8)
                 ),
                 React.createElement(
                     "div",
                     { className: "row" },
-                    this.createrRow(9)
+                    this.createRow(9)
                 )
             );
         }

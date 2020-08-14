@@ -45,10 +45,14 @@ const Gameboard = () => {
 
   const receiveAttack = (x, y) => {
     let pos = x + (y * 10);
-    if (board[pos] != null && typeof parseFloat(board[pos]) === "number"){
+    console.log(pos);
+    let square = parseFloat(board[pos]);
+    // if (board[pos] != null && typeof parseFloat(board[pos]) === "number"){
+    if (!isNaN(square)){
       let id = board[pos].split(".");
-      shipNum = parseInt(id[0]);
-      shipPos = parseInt(id[1]);
+      console.log(id);
+      let shipNum = parseInt(id[0]);
+      let shipPos = parseInt(id[1]);
       ships[shipNum].hit(shipPos);
       board.splice(pos, 1, "h");
     }
@@ -80,15 +84,6 @@ const Player = (gameboard) => {
 
   return{attack, receiveAttack, gameboard}
 }
-
-// const Game = (() => {
-//   let userTurn = true;
-//   let player1 =  Player(Gameboard());
-//   let CPU = Player(Gameboard());
-
-//   return{userTurn}
-// })()
-
 
 // let testBoard = Gameboard();
 // testBoard.getBoard()[0] = 1;
