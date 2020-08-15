@@ -29,7 +29,9 @@ var Game = function (_React$Component) {
         _this.state = {
             userTurn: true,
             playerGrid: player1.gameboard.getBoard(),
-            cpuGrid: CPU.gameboard.getBoard()
+            cpuGrid: CPU.gameboard.getBoard(),
+            gameEnd: false,
+            winner: null
         };
         return _this;
     }
@@ -37,21 +39,40 @@ var Game = function (_React$Component) {
     _createClass(Game, [{
         key: "handleClick",
         value: function handleClick(x, y, player, value) {
+            var _this2 = this;
+
             // this.receiveAttack(x,y);
-            if (value != "m" && value != "h") {
+            if (value != "m" && value != "h" && this.state.gameEnd == false) {
                 if (player === "player1" && this.state.userTurn === true) {
                     player1.gameboard.receiveAttack(x, y);
                     this.setState({
                         playerGrid: player1.gameboard.getBoard(),
                         userTurn: !this.state.userTurn
                     });
+                    if (player1.gameboard.allSunk()) {
+                        this.setState({
+                            gameEnd: true,
+                            winner: "Player 2"
+                        }, function () {
+                            alert(_this2.state.winner + " wins!");
+                        });
+                    }
                 }
+
                 if (player === "player2" && !this.state.userTurn) {
                     CPU.gameboard.receiveAttack(x, y);
                     this.setState({
                         cpuGrid: CPU.gameboard.getBoard(),
                         userTurn: !this.state.userTurn
                     });
+                    if (CPU.gameboard.allSunk()) {
+                        this.setState({
+                            gameEnd: true,
+                            winner: "Player 1"
+                        }, function () {
+                            alert(_this2.state.winner + " wins!");
+                        });
+                    }
                 }
             }
         }
@@ -96,7 +117,7 @@ var Grid = function (_React$Component2) {
     _createClass(Grid, [{
         key: "renderSquare",
         value: function renderSquare(i) {
-            var _this3 = this;
+            var _this4 = this;
 
             var squareClass = "water";
             if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "healthyShip";
@@ -108,7 +129,7 @@ var Grid = function (_React$Component2) {
                 squareClass: squareClass,
                 value: this.props.board[i],
                 onClick: function onClick() {
-                    return _this3.props.onClick(x, y, _this3.props.playerName, _this3.props.board[i]);
+                    return _this4.props.onClick(x, y, _this4.props.playerName, _this4.props.board[i]);
                 },
                 key: i
             });

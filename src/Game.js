@@ -16,26 +16,45 @@ class Game extends React.Component{
             this.state = {
                 userTurn: true,
                 playerGrid: player1.gameboard.getBoard(),
-                cpuGrid: CPU.gameboard.getBoard()
+                cpuGrid: CPU.gameboard.getBoard(),
+                gameEnd: false,
+                winner: null
         };
     }
 
     handleClick(x,y,player,value){
         // this.receiveAttack(x,y);
-        if(value != "m" && value != "h"){
+        if(value != "m" && value != "h" && this.state.gameEnd == false){
             if(player === "player1" && this.state.userTurn === true){
                 player1.gameboard.receiveAttack(x,y);
                 this.setState({
                     playerGrid: player1.gameboard.getBoard(),
                     userTurn: !this.state.userTurn
                 });
+                if(player1.gameboard.allSunk()) {
+                    this.setState({
+                        gameEnd: true,
+                        winner: "Player 2"
+                    }, () => {
+                        alert(this.state.winner + " wins!");
+                    });
+                }
             }
+
             if(player === "player2" && !this.state.userTurn){
                 CPU.gameboard.receiveAttack(x,y);
                 this.setState({
                     cpuGrid: CPU.gameboard.getBoard(),
                     userTurn: !this.state.userTurn
                 });
+                if(CPU.gameboard.allSunk()) {
+                    this.setState({
+                        gameEnd: true,
+                        winner: "Player 1"
+                    }, () => {
+                        alert(this.state.winner + " wins!");
+                    });
+                }
             }
         }
     }
