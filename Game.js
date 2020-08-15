@@ -36,15 +36,23 @@ var Game = function (_React$Component) {
 
     _createClass(Game, [{
         key: "handleClick",
-        value: function handleClick(x, y, player) {
+        value: function handleClick(x, y, player, value) {
             // this.receiveAttack(x,y);
-            if (player === "player1") {
-                player1.gameboard.receiveAttack(x, y);
-                this.setState({ playerGrid: player1.gameboard.getBoard() });
-            }
-            if (player === "player2") {
-                CPU.gameboard.receiveAttack(x, y);
-                this.setState({ cpuGrid: CPU.gameboard.getBoard() });
+            if (value != "m" && value != "h") {
+                if (player === "player1" && this.state.userTurn === true) {
+                    player1.gameboard.receiveAttack(x, y);
+                    this.setState({
+                        playerGrid: player1.gameboard.getBoard(),
+                        userTurn: !this.state.userTurn
+                    });
+                }
+                if (player === "player2" && !this.state.userTurn) {
+                    CPU.gameboard.receiveAttack(x, y);
+                    this.setState({
+                        cpuGrid: CPU.gameboard.getBoard(),
+                        userTurn: !this.state.userTurn
+                    });
+                }
             }
         }
     }, {
@@ -100,7 +108,7 @@ var Grid = function (_React$Component2) {
                 squareClass: squareClass,
                 value: this.props.board[i],
                 onClick: function onClick() {
-                    return _this3.props.onClick(x, y, _this3.props.playerName);
+                    return _this3.props.onClick(x, y, _this3.props.playerName, _this3.props.board[i]);
                 },
                 key: i
             });

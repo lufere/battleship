@@ -20,15 +20,23 @@ class Game extends React.Component{
         };
     }
 
-    handleClick(x,y,player){
+    handleClick(x,y,player,value){
         // this.receiveAttack(x,y);
-        if(player === "player1"){
-            player1.gameboard.receiveAttack(x,y);
-            this.setState({playerGrid: player1.gameboard.getBoard()});
-        }
-        if(player === "player2"){
-            CPU.gameboard.receiveAttack(x,y);
-            this.setState({cpuGrid: CPU.gameboard.getBoard()});
+        if(value != "m" && value != "h"){
+            if(player === "player1" && this.state.userTurn === true){
+                player1.gameboard.receiveAttack(x,y);
+                this.setState({
+                    playerGrid: player1.gameboard.getBoard(),
+                    userTurn: !this.state.userTurn
+                });
+            }
+            if(player === "player2" && !this.state.userTurn){
+                CPU.gameboard.receiveAttack(x,y);
+                this.setState({
+                    cpuGrid: CPU.gameboard.getBoard(),
+                    userTurn: !this.state.userTurn
+                });
+            }
         }
     }
 
@@ -72,7 +80,7 @@ class Grid extends React.Component{
           <Square
             squareClass={squareClass}
             value={this.props.board[i]}
-            onClick={() => this.props.onClick(x,y,this.props.playerName)}
+            onClick={() => this.props.onClick(x,y,this.props.playerName,this.props.board[i])}
             key = {i}
           />
         );
