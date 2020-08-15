@@ -1,37 +1,51 @@
+let player1 =  Player(Gameboard());
+let CPU = Player(Gameboard());
+
 class Game extends React.Component{
     constructor(props){
         super(props);
-        let player1 =  Player(Gameboard());
-        let CPU = Player(Gameboard());
         player1.gameboard.place(0,0,Ship(3),true);
         player1.gameboard.place(2,2,Ship(4),false);
         player1.gameboard.place(6,1,Ship(4),false);
         player1.gameboard.place(4,7,Ship(4),true);
-        // player1.gameboard.receiveAttack(2,3);
-        // player1.gameboard.receiveAttack(4,2);
-        this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
-        this.getBoard = player1.gameboard.getBoard.bind(this);
+        CPU.gameboard.place(6,7,Ship(4),true);
+        // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
+        // this.getBoard = player1.gameboard.getBoard.bind(this);
         this.handleClick = this.handleClick.bind(this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
             this.state = {
                 userTurn: true,
-                playerGrid: player1.gameboard.getBoard()
+                playerGrid: player1.gameboard.getBoard(),
+                cpuGrid: CPU.gameboard.getBoard()
         };
     }
 
-    handleClick(x,y){
-        this.receiveAttack(x,y);
-        this.setState({
-            playerGrid: this.getBoard()
-        });
+    handleClick(x,y,player){
+        // this.receiveAttack(x,y);
+        if(player === "player1"){
+            player1.gameboard.receiveAttack(x,y);
+            this.setState({playerGrid: player1.gameboard.getBoard()});
+        }
+        if(player === "player2"){
+            CPU.gameboard.receiveAttack(x,y);
+            this.setState({cpuGrid: CPU.gameboard.getBoard()});
+        }
     }
 
     render(){
         return(
-            <Grid
-                board = {this.state.playerGrid}
-                onClick = {this.handleClick}
-            />
+            <div>
+                <Grid
+                    playerName = {"player1"}
+                    board = {this.state.playerGrid}
+                    onClick = {this.handleClick}
+                />
+                <Grid
+                    playerName = {"player2"}
+                    board = {this.state.cpuGrid}
+                    onClick = {this.handleClick}
+                />
+            </div>
         );
     }
 }
@@ -58,7 +72,7 @@ class Grid extends React.Component{
           <Square
             squareClass={squareClass}
             value={this.props.board[i]}
-            onClick={() => this.props.onClick(x,y)}
+            onClick={() => this.props.onClick(x,y,this.props.playerName)}
             key = {i}
           />
         );

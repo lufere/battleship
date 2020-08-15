@@ -6,6 +6,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var player1 = Player(Gameboard());
+var CPU = Player(Gameboard());
+
 var Game = function (_React$Component) {
     _inherits(Game, _React$Component);
 
@@ -14,40 +17,53 @@ var Game = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
-        var player1 = Player(Gameboard());
-        var CPU = Player(Gameboard());
         player1.gameboard.place(0, 0, Ship(3), true);
         player1.gameboard.place(2, 2, Ship(4), false);
         player1.gameboard.place(6, 1, Ship(4), false);
         player1.gameboard.place(4, 7, Ship(4), true);
-        // player1.gameboard.receiveAttack(2,3);
-        // player1.gameboard.receiveAttack(4,2);
-        _this.receiveAttack = player1.gameboard.receiveAttack.bind(_this);
-        _this.getBoard = player1.gameboard.getBoard.bind(_this);
+        CPU.gameboard.place(6, 7, Ship(4), true);
+        // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
+        // this.getBoard = player1.gameboard.getBoard.bind(this);
         _this.handleClick = _this.handleClick.bind(_this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
-            playerGrid: player1.gameboard.getBoard()
+            playerGrid: player1.gameboard.getBoard(),
+            cpuGrid: CPU.gameboard.getBoard()
         };
         return _this;
     }
 
     _createClass(Game, [{
         key: "handleClick",
-        value: function handleClick(x, y) {
-            this.receiveAttack(x, y);
-            this.setState({
-                playerGrid: this.getBoard()
-            });
+        value: function handleClick(x, y, player) {
+            // this.receiveAttack(x,y);
+            if (player === "player1") {
+                player1.gameboard.receiveAttack(x, y);
+                this.setState({ playerGrid: player1.gameboard.getBoard() });
+            }
+            if (player === "player2") {
+                CPU.gameboard.receiveAttack(x, y);
+                this.setState({ cpuGrid: CPU.gameboard.getBoard() });
+            }
         }
     }, {
         key: "render",
         value: function render() {
-            return React.createElement(Grid, {
-                board: this.state.playerGrid,
-                onClick: this.handleClick
-            });
+            return React.createElement(
+                "div",
+                null,
+                React.createElement(Grid, {
+                    playerName: "player1",
+                    board: this.state.playerGrid,
+                    onClick: this.handleClick
+                }),
+                React.createElement(Grid, {
+                    playerName: "player2",
+                    board: this.state.cpuGrid,
+                    onClick: this.handleClick
+                })
+            );
         }
     }]);
 
@@ -84,7 +100,7 @@ var Grid = function (_React$Component2) {
                 squareClass: squareClass,
                 value: this.props.board[i],
                 onClick: function onClick() {
-                    return _this3.props.onClick(x, y);
+                    return _this3.props.onClick(x, y, _this3.props.playerName);
                 },
                 key: i
             });

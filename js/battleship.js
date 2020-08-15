@@ -71,7 +71,7 @@ const Gameboard = () => {
   return{place, getBoard, receiveAttack, allSunk}
 }
 
-const Player = (gameboard) => {
+const Player = (gameboard, name) => {
   const attack = (player, x, y) => {
     if(Game.userTurn == true){
       player.receiveAttack(x, y);
@@ -82,7 +82,7 @@ const Player = (gameboard) => {
     gameboard.receiveAttack(x, y);
   }
 
-  return{attack, receiveAttack, gameboard}
+  return{attack, receiveAttack, gameboard, name}
 }
 
 // let testBoard = Gameboard();
