@@ -25,6 +25,7 @@ var Game = function (_React$Component) {
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
         // this.getBoard = player1.gameboard.getBoard.bind(this);
         _this.handleClick = _this.handleClick.bind(_this);
+        _this.checkWinner = _this.checkWinner.bind(_this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
@@ -39,8 +40,6 @@ var Game = function (_React$Component) {
     _createClass(Game, [{
         key: "handleClick",
         value: function handleClick(x, y, player, value) {
-            var _this2 = this;
-
             // this.receiveAttack(x,y);
             if (value != "m" && value != "h" && this.state.gameEnd == false) {
                 if (player === "player1" && this.state.userTurn === true) {
@@ -49,14 +48,7 @@ var Game = function (_React$Component) {
                         playerGrid: player1.gameboard.getBoard(),
                         userTurn: !this.state.userTurn
                     });
-                    if (player1.gameboard.allSunk()) {
-                        this.setState({
-                            gameEnd: true,
-                            winner: "Player 2"
-                        }, function () {
-                            alert(_this2.state.winner + " wins!");
-                        });
-                    }
+                    this.checkWinner();
                 }
 
                 if (player === "player2" && !this.state.userTurn) {
@@ -65,15 +57,30 @@ var Game = function (_React$Component) {
                         cpuGrid: CPU.gameboard.getBoard(),
                         userTurn: !this.state.userTurn
                     });
-                    if (CPU.gameboard.allSunk()) {
-                        this.setState({
-                            gameEnd: true,
-                            winner: "Player 1"
-                        }, function () {
-                            alert(_this2.state.winner + " wins!");
-                        });
-                    }
+                    this.checkWinner();
                 }
+            }
+        }
+    }, {
+        key: "checkWinner",
+        value: function checkWinner() {
+            var _this2 = this;
+
+            if (player1.gameboard.allSunk()) {
+                this.setState({
+                    gameEnd: true,
+                    winner: "Player 2"
+                }, function () {
+                    alert(_this2.state.winner + " wins!");
+                });
+            }
+            if (CPU.gameboard.allSunk()) {
+                this.setState({
+                    gameEnd: true,
+                    winner: "Player 1"
+                }, function () {
+                    alert(_this2.state.winner + " wins!");
+                });
             }
         }
     }, {

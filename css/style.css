@@ -17,8 +17,10 @@
 #game > div{
     display: flex;
     justify-content:space-evenly;
-    margin-top: 100px;
-    /* border: 1px solid red; */
+    margin-top: 20px;
+    align-items: center;
+    height: 100%;
+    border: 2px ssolid red;
 }
 
 #test{

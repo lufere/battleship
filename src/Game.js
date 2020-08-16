@@ -12,6 +12,7 @@ class Game extends React.Component{
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
         // this.getBoard = player1.gameboard.getBoard.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.checkWinner = this.checkWinner.bind(this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
             this.state = {
                 userTurn: true,
@@ -31,14 +32,7 @@ class Game extends React.Component{
                     playerGrid: player1.gameboard.getBoard(),
                     userTurn: !this.state.userTurn
                 });
-                if(player1.gameboard.allSunk()) {
-                    this.setState({
-                        gameEnd: true,
-                        winner: "Player 2"
-                    }, () => {
-                        alert(this.state.winner + " wins!");
-                    });
-                }
+                this.checkWinner();
             }
 
             if(player === "player2" && !this.state.userTurn){
@@ -47,15 +41,27 @@ class Game extends React.Component{
                     cpuGrid: CPU.gameboard.getBoard(),
                     userTurn: !this.state.userTurn
                 });
-                if(CPU.gameboard.allSunk()) {
-                    this.setState({
-                        gameEnd: true,
-                        winner: "Player 1"
-                    }, () => {
-                        alert(this.state.winner + " wins!");
-                    });
-                }
+                this.checkWinner();
             }
+        }
+    }
+
+    checkWinner(){
+        if(player1.gameboard.allSunk()) {
+            this.setState({
+                gameEnd: true,
+                winner: "Player 2"
+            }, () => {
+                alert(this.state.winner + " wins!");
+            });
+        }
+        if(CPU.gameboard.allSunk()) {
+            this.setState({
+                gameEnd: true,
+                winner: "Player 1"
+            }, () => {
+                alert(this.state.winner + " wins!");
+            });
         }
     }
 
