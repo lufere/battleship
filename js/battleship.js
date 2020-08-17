@@ -45,18 +45,23 @@ const Gameboard = () => {
 
   const receiveAttack = (x, y) => {
     let pos = x + (y * 10);
-    console.log(pos);
+    // console.log(pos);
     let square = parseFloat(board[pos]);
     // if (board[pos] != null && typeof parseFloat(board[pos]) === "number"){
     if (!isNaN(square)){
       let id = board[pos].split(".");
-      console.log(id);
+      // console.log(id);
       let shipNum = parseInt(id[0]);
       let shipPos = parseInt(id[1]);
       ships[shipNum].hit(shipPos);
       board.splice(pos, 1, "h");
+      return true
     }
-    if(board[pos] === null) board.splice(pos, 1, "m");
+    if(board[pos] === null) {
+      board.splice(pos, 1, "m");
+      return true
+    }
+    return false
   }
 
   const allSunk = () => {
@@ -82,7 +87,18 @@ const Player = (gameboard, name) => {
     gameboard.receiveAttack(x, y);
   }
 
-  return{attack, receiveAttack, gameboard, name}
+  const receiveRandomAttack = () => {
+    let valid = false;
+    let randomX = Math.floor(Math.random() * 10);
+    let randomY = Math.floor(Math.random() * 10);
+    while(valid === false){
+      valid = gameboard.receiveAttack(randomX, randomY);
+      randomX = Math.floor(Math.random() * 10);
+      randomY = Math.floor(Math.random() * 10);
+    }
+  }
+
+  return{attack, receiveAttack, receiveRandomAttack, gameboard, name}
 }
 
 // let testBoard = Gameboard();

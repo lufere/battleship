@@ -32,7 +32,8 @@ var Game = function (_React$Component) {
             playerGrid: player1.gameboard.getBoard(),
             cpuGrid: CPU.gameboard.getBoard(),
             gameEnd: false,
-            winner: null
+            winner: null,
+            multiplayer: false
         };
         return _this;
     }

@@ -2,6 +2,7 @@ const battleship = require('./battleship');
 
 const Ship = battleship.Ship;
 const Gameboard = battleship.Gameboard;
+const Player = battleship.Player;
 
 test('Create ships with the correct length', () => {
   expect(Ship(1).length).toBe(1);
@@ -133,4 +134,22 @@ test('Missed attacks are recorded', () => {
   testBoard.place(3, 1, Ship(2), true);
   testBoard.receiveAttack(2,1);
   expect(testBoard.getBoard()[12]).toBe("m");
+});
+
+test('Board successfully receives a random attack', () => {
+  let testPlayer =  Player(Gameboard());
+  testPlayer.receiveRandomAttack();
+  let missed = testPlayer.gameboard.getBoard().filter(square => square === "m");
+  expect(missed.length).toBe(1);
+});
+
+test('Board successfully receives multiple random attacks without repeating moves', () => {
+  let testPlayer =  Player(Gameboard());
+  testPlayer.receiveRandomAttack();
+  testPlayer.receiveRandomAttack();
+  testPlayer.receiveRandomAttack();
+  testPlayer.receiveRandomAttack();
+  testPlayer.receiveRandomAttack();
+  let missed = testPlayer.gameboard.getBoard().filter(square => square === "m");
+  expect(missed.length).toBe(5);
 });
