@@ -5,9 +5,9 @@ class Game extends React.Component{
     constructor(props){
         super(props);
         player1.gameboard.place(0,0,Ship(3),true);
-        player1.gameboard.place(2,2,Ship(4),false);
-        player1.gameboard.place(6,1,Ship(4),false);
-        player1.gameboard.place(4,7,Ship(4),true);
+        // player1.gameboard.place(2,2,Ship(4),false);
+        // player1.gameboard.place(6,1,Ship(4),false);
+        // player1.gameboard.place(4,7,Ship(4),true);
         CPU.gameboard.place(6,7,Ship(4),true);
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
         // this.getBoard = player1.gameboard.getBoard.bind(this);
@@ -27,7 +27,7 @@ class Game extends React.Component{
     handleClick(x,y,player,value){
         // this.receiveAttack(x,y);
         if(value != "m" && value != "h" && this.state.gameEnd == false){
-            if(player === "player1" && this.state.userTurn === true){
+            if(player === "player1" && this.state.userTurn === false){
                 player1.gameboard.receiveAttack(x,y);
                 this.setState({
                     playerGrid: player1.gameboard.getBoard(),
@@ -36,15 +36,26 @@ class Game extends React.Component{
                 this.checkWinner();
             }
 
-            if(player === "player2" && !this.state.userTurn){
+            if(player === "player2" && this.state.userTurn === true){
                 CPU.gameboard.receiveAttack(x,y);
                 this.setState({
                     cpuGrid: CPU.gameboard.getBoard(),
                     userTurn: !this.state.userTurn
                 });
                 this.checkWinner();
+                // if(this.state.multiplayer === false) this.computerMove();
+                if(this.state.multiplayer === false) this.computerMove();
             }
         }
+    }
+
+    computerMove(){
+        player1.receiveRandomAttack();
+        this.setState({
+            playerGrid: player1.gameboard.getBoard(),
+            userTurn: true
+        }, ()=> console.log(this.state.userTurn));
+        this.checkWinner();
     }
 
     checkWinner(){

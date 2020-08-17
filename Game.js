@@ -18,9 +18,9 @@ var Game = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
         player1.gameboard.place(0, 0, Ship(3), true);
-        player1.gameboard.place(2, 2, Ship(4), false);
-        player1.gameboard.place(6, 1, Ship(4), false);
-        player1.gameboard.place(4, 7, Ship(4), true);
+        // player1.gameboard.place(2,2,Ship(4),false);
+        // player1.gameboard.place(6,1,Ship(4),false);
+        // player1.gameboard.place(4,7,Ship(4),true);
         CPU.gameboard.place(6, 7, Ship(4), true);
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
         // this.getBoard = player1.gameboard.getBoard.bind(this);
@@ -43,7 +43,7 @@ var Game = function (_React$Component) {
         value: function handleClick(x, y, player, value) {
             // this.receiveAttack(x,y);
             if (value != "m" && value != "h" && this.state.gameEnd == false) {
-                if (player === "player1" && this.state.userTurn === true) {
+                if (player === "player1" && this.state.userTurn === false) {
                     player1.gameboard.receiveAttack(x, y);
                     this.setState({
                         playerGrid: player1.gameboard.getBoard(),
@@ -52,27 +52,43 @@ var Game = function (_React$Component) {
                     this.checkWinner();
                 }
 
-                if (player === "player2" && !this.state.userTurn) {
+                if (player === "player2" && this.state.userTurn === true) {
                     CPU.gameboard.receiveAttack(x, y);
                     this.setState({
                         cpuGrid: CPU.gameboard.getBoard(),
                         userTurn: !this.state.userTurn
                     });
                     this.checkWinner();
+                    // if(this.state.multiplayer === false) this.computerMove();
+                    if (this.state.multiplayer === false) this.computerMove();
                 }
             }
         }
     }, {
+        key: "computerMove",
+        value: function computerMove() {
+            var _this2 = this;
+
+            player1.receiveRandomAttack();
+            this.setState({
+                playerGrid: player1.gameboard.getBoard(),
+                userTurn: true
+            }, function () {
+                return console.log(_this2.state.userTurn);
+            });
+            this.checkWinner();
+        }
+    }, {
         key: "checkWinner",
         value: function checkWinner() {
-            var _this2 = this;
+            var _this3 = this;
 
             if (player1.gameboard.allSunk()) {
                 this.setState({
                     gameEnd: true,
                     winner: "Player 2"
                 }, function () {
-                    alert(_this2.state.winner + " wins!");
+                    alert(_this3.state.winner + " wins!");
                 });
             }
             if (CPU.gameboard.allSunk()) {
@@ -80,7 +96,7 @@ var Game = function (_React$Component) {
                     gameEnd: true,
                     winner: "Player 1"
                 }, function () {
-                    alert(_this2.state.winner + " wins!");
+                    alert(_this3.state.winner + " wins!");
                 });
             }
         }
@@ -125,7 +141,7 @@ var Grid = function (_React$Component2) {
     _createClass(Grid, [{
         key: "renderSquare",
         value: function renderSquare(i) {
-            var _this4 = this;
+            var _this5 = this;
 
             var squareClass = "water";
             if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "healthyShip";
@@ -137,7 +153,7 @@ var Grid = function (_React$Component2) {
                 squareClass: squareClass,
                 value: this.props.board[i],
                 onClick: function onClick() {
-                    return _this4.props.onClick(x, y, _this4.props.playerName, _this4.props.board[i]);
+                    return _this5.props.onClick(x, y, _this5.props.playerName, _this5.props.board[i]);
                 },
                 key: i
             });
