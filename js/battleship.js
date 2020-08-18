@@ -24,22 +24,29 @@ const Gameboard = () => {
 
   const place = (x, y, ship, horizontal) => {
     let available;
+    let valid = true;
     ships[index] = ship;
     let pos = x + (y * 10);
     horizontal ? available = 10-x : available = 10-y;
-    if(horizontal === true && available >= ship.length){
-      for (let i = 0; i < ship.length; i++) {
-        let id = index.toString() + "." + i.toString();
-        board.splice(pos + i, 1, id);
-      }
-      index++
+    for (let i = 0; i < ship.length; i++) {
+      if(horizontal==true && board[pos+i] != null) valid = false;
+      if(horizontal==true && board[pos+i] != null) valid = false;
     }
-    if(horizontal === false && available >= ship.length){
+    if(horizontal === true && available >= ship.length && valid==true){
       for (let i = 0; i < ship.length; i++) {
         let id = index.toString() + "." + i.toString();
-        board.splice(pos + (i*10), 1, id);
+        if(valid == true) board.splice(pos + i, 1, id);
       }
-      index++
+      index++;
+      return true
+    }
+    if(horizontal === false && available >= ship.length && valid==true){
+      for (let i = 0; i < ship.length; i++) {
+        let id = index.toString() + "." + i.toString();
+        if(valid == true) board.splice(pos + (i*10), 1, id);
+      }
+      index++;
+      return true
     }
   }
 
