@@ -23,35 +23,37 @@ const Gameboard = () => {
   }
 
   const place = (x, y, ship, horizontal) => {
-    let available;
-    let valid = true;
+    let valid = checkValidity(x,y,ship.length,horizontal);
     ships[index] = ship;
     let pos = x + (y * 10);
-    horizontal ? available = 10-x : available = 10-y;
-    for (let i = 0; i < ship.length; i++) {
-      if(horizontal==true && board[pos+i] != null) valid = false;
-      if(horizontal==false && board[pos+(i*10)] != null) valid = false;
-    }
-    if(horizontal === true && available >= ship.length && valid==true){
-      for (let i = 0; i < ship.length; i++) {
-        let id = index.toString() + "." + i.toString();
-        if(valid == true) board.splice(pos + i, 1, id);
+    if(valid==true){
+      if (horizontal == true){
+          for (let i = 0; i < ship.length; i++) {
+          let id = index.toString() + "." + i.toString();
+          if(valid == true) board.splice(pos + i, 1, id);
+        }
       }
-      index++;
-      return true
-    }
-    if(horizontal === false && available >= ship.length && valid==true){
-      for (let i = 0; i < ship.length; i++) {
-        let id = index.toString() + "." + i.toString();
-        if(valid == true) board.splice(pos + (i*10), 1, id);
+      if (horizontal == false){
+        for (let i = 0; i < ship.length; i++) {
+          let id = index.toString() + "." + i.toString();
+          if(valid == true) board.splice(pos + (i*10), 1, id);
+        }
       }
       index++;
       return true
     }
   }
 
-  const randomPlace = (x, y, ship) =>{
-
+  const checkValidity = (x, y, length, horizontal) => {
+    let pos = x + (y * 10);
+    let available;
+    horizontal ? available = 10-x : available = 10-y;
+    if(available < length) return false
+    for (let i = 0; i < length; i++) {
+      if(horizontal==true && board[pos+i] != null) return  false;
+      if(horizontal==false && board[pos+(i*10)] != null) return false;
+    }
+    return true;
   }
 
   const receiveAttack = (x, y) => {
