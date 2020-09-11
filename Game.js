@@ -21,20 +21,14 @@ var Game = function (_React$Component) {
         // player1.gameboard.place(6,1,Ship(4),false);
         var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
-        player1.gameboard.randomPlace(Ship(2));
-        player1.gameboard.randomPlace(Ship(3));
-        player1.gameboard.randomPlace(Ship(3));
-        player1.gameboard.randomPlace(Ship(3));
-        player1.gameboard.randomPlace(Ship(5));
-        CPU.gameboard.randomPlace(Ship(2));
-        CPU.gameboard.randomPlace(Ship(3));
-        CPU.gameboard.randomPlace(Ship(3));
-        CPU.gameboard.randomPlace(Ship(3));
-        CPU.gameboard.randomPlace(Ship(5));
+        player1.gameboard.randomSetup();
+        CPU.gameboard.randomSetup();
+        // CPU.gameboard.clearBoard();
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
         // this.getBoard = player1.gameboard.getBoard.bind(this);
         _this.handleClick = _this.handleClick.bind(_this);
         _this.checkWinner = _this.checkWinner.bind(_this);
+        _this.reset = _this.reset.bind(_this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
@@ -90,14 +84,12 @@ var Game = function (_React$Component) {
     }, {
         key: "checkWinner",
         value: function checkWinner() {
-            var _this3 = this;
-
             if (player1.gameboard.allSunk()) {
                 this.setState({
                     gameEnd: true,
                     winner: "Player 2"
                 }, function () {
-                    alert(_this3.state.winner + " wins!");
+                    // alert(this.state.winner + " wins!");
                 });
             }
             if (CPU.gameboard.allSunk()) {
@@ -105,9 +97,24 @@ var Game = function (_React$Component) {
                     gameEnd: true,
                     winner: "Player 1"
                 }, function () {
-                    alert(_this3.state.winner + " wins!");
+                    // alert(this.state.winner + " wins!");
                 });
             }
+        }
+    }, {
+        key: "reset",
+        value: function reset() {
+            player1.gameboard.clearBoard();
+            CPU.gameboard.clearBoard();
+            player1.gameboard.randomSetup();
+            CPU.gameboard.randomSetup();
+            this.setState({
+                playerGrid: player1.gameboard.getBoard(),
+                cpuGrid: CPU.gameboard.getBoard(),
+                gameEnd: false,
+                winner: null,
+                userTurn: true
+            });
         }
     }, {
         key: "render",
@@ -115,15 +122,24 @@ var Game = function (_React$Component) {
             return React.createElement(
                 "div",
                 null,
-                React.createElement(Grid, {
-                    playerName: "player1",
-                    board: this.state.playerGrid,
-                    onClick: this.handleClick
-                }),
-                React.createElement(Grid, {
-                    playerName: "player2",
-                    board: this.state.cpuGrid,
-                    onClick: this.handleClick
+                React.createElement(
+                    "div",
+                    { id: "boards" },
+                    React.createElement(Grid, {
+                        playerName: "player1",
+                        board: this.state.playerGrid,
+                        onClick: this.handleClick
+                    }),
+                    React.createElement(Grid, {
+                        playerName: "player2",
+                        board: this.state.cpuGrid,
+                        onClick: this.handleClick
+                    })
+                ),
+                React.createElement(GameStatus, {
+                    gameEnd: this.state.gameEnd,
+                    winner: this.state.winner,
+                    onClick: this.reset
                 })
             );
         }
@@ -131,6 +147,29 @@ var Game = function (_React$Component) {
 
     return Game;
 }(React.Component);
+
+function GameStatus(props) {
+    if (props.gameEnd == true) {
+        return React.createElement(
+            "div",
+            { id: "status" },
+            React.createElement(
+                "p",
+                null,
+                props.winner,
+                " wins!"
+            ),
+            React.createElement(
+                "button",
+                {
+                    onClick: props.onClick
+                },
+                "Play again?"
+            )
+        );
+    }
+    return null;
+}
 
 function Square(props) {
     return React.createElement("button", {
@@ -150,7 +189,7 @@ var Grid = function (_React$Component2) {
     _createClass(Grid, [{
         key: "renderSquare",
         value: function renderSquare(i) {
-            var _this5 = this;
+            var _this4 = this;
 
             var squareClass = "water";
             if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "healthyShip";
@@ -162,7 +201,7 @@ var Grid = function (_React$Component2) {
                 squareClass: squareClass,
                 value: this.props.board[i],
                 onClick: function onClick() {
-                    return _this5.props.onClick(x, y, _this5.props.playerName, _this5.props.board[i]);
+                    return _this4.props.onClick(x, y, _this4.props.playerName, _this4.props.board[i]);
                 },
                 key: i
             });

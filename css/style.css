@@ -14,19 +14,39 @@
     width: 100%;
 }
 
-#game > div{
+#boards{
     display: flex;
     justify-content:space-evenly;
     margin-top: 20px;
     align-items: center;
     height: 100%;
-    border: 2px ssolid red;
+    width: 100%;
+    /* border: 2px solid red; */
+    margin-bottom: 20px;
+}
+
+#game > div{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }
 
 #test{
     height: 200px;
     width: 200px;
     background-color: black;
+}
+
+#status{
+    display: flex;
+    flex-flow: column;
+    font-size: 30px;
+    align-items: center;
+}
+
+#status button{
+    margin-top: 10px;
+    width: 100px;
 }
 
 .square{

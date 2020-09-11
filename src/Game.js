@@ -8,20 +8,14 @@ class Game extends React.Component{
         // player1.gameboard.place(2,2,Ship(4),false);
         // player1.gameboard.place(4,7,Ship(4),true);
         // player1.gameboard.place(6,1,Ship(4),false);
-        player1.gameboard.randomPlace(Ship(2));
-        player1.gameboard.randomPlace(Ship(3));
-        player1.gameboard.randomPlace(Ship(3));
-        player1.gameboard.randomPlace(Ship(3));
-        player1.gameboard.randomPlace(Ship(5));
-        CPU.gameboard.randomPlace(Ship(2));
-        CPU.gameboard.randomPlace(Ship(3));
-        CPU.gameboard.randomPlace(Ship(3));
-        CPU.gameboard.randomPlace(Ship(3));
-        CPU.gameboard.randomPlace(Ship(5));
+        player1.gameboard.randomSetup();
+        CPU.gameboard.randomSetup();
+        // CPU.gameboard.clearBoard();
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
         // this.getBoard = player1.gameboard.getBoard.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.checkWinner = this.checkWinner.bind(this);
+        this.reset = this.reset.bind(this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
             this.state = {
                 userTurn: true,
@@ -73,7 +67,7 @@ class Game extends React.Component{
                 gameEnd: true,
                 winner: "Player 2"
             }, () => {
-                alert(this.state.winner + " wins!");
+                // alert(this.state.winner + " wins!");
             });
         }
         if(CPU.gameboard.allSunk()) {
@@ -81,27 +75,64 @@ class Game extends React.Component{
                 gameEnd: true,
                 winner: "Player 1"
             }, () => {
-                alert(this.state.winner + " wins!");
+                // alert(this.state.winner + " wins!");
             });
         }
+    }
+
+    reset(){
+        player1.gameboard.clearBoard();
+        CPU.gameboard.clearBoard();
+        player1.gameboard.randomSetup();
+        CPU.gameboard.randomSetup();
+        this.setState({
+            playerGrid: player1.gameboard.getBoard(),
+            cpuGrid: CPU.gameboard.getBoard(),
+            gameEnd: false,
+            winner: null,
+            userTurn: true,
+        });
     }
 
     render(){
         return(
             <div>
-                <Grid
-                    playerName = {"player1"}
-                    board = {this.state.playerGrid}
-                    onClick = {this.handleClick}
-                />
-                <Grid
-                    playerName = {"player2"}
-                    board = {this.state.cpuGrid}
-                    onClick = {this.handleClick}
+                <div id = "boards">
+                    <Grid
+                        playerName = {"player1"}
+                        board = {this.state.playerGrid}
+                        onClick = {this.handleClick}
+                    />
+                    <Grid
+                        playerName = {"player2"}
+                        board = {this.state.cpuGrid}
+                        onClick = {this.handleClick}
+                    />
+                </div>
+                <GameStatus
+                    gameEnd = {this.state.gameEnd}
+                    winner = {this.state.winner}
+                    onClick = {this.reset}
                 />
             </div>
         );
     }
+}
+
+function GameStatus(props){
+    if(props.gameEnd == true){
+        return(
+            <div id = "status">
+                <p>{props.winner} wins!</p>
+                <button
+                    onClick = {props.onClick}
+                >
+                Play again?
+                </button>
+            </div>
+        )
+    }
+    return null
 }
 
 function Square(props) {
