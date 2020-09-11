@@ -23,7 +23,7 @@ const Gameboard = () => {
   }
 
   const place = (x, y, ship, horizontal) => {
-    let valid = checkValidity(x,y,ship.length,horizontal);
+    let valid = checkValidity(x, y, ship.length, horizontal);
     ships[index] = ship;
     let pos = x + (y * 10);
     if(valid==true){
@@ -42,6 +42,16 @@ const Gameboard = () => {
       index++;
       return true
     }
+  }
+
+  const randomPlace = (ship) =>{
+    let randomX = Math.floor(Math.random() * 10);
+    let randomY = Math.floor(Math.random() * 10);
+    let horizontal = true;
+    Math.floor(Math.random() * 2) == 0 ? horizontal = true: horizontal = false;
+    let valid = checkValidity(randomX, randomY, ship.length, horizontal);
+    if (valid == false) randomPlace(ship);
+    if (valid == true) place(randomX, randomY, ship, horizontal);
   }
 
   const checkValidity = (x, y, length, horizontal) => {
@@ -86,7 +96,7 @@ const Gameboard = () => {
     });
   }
 
-  return{place, getBoard, receiveAttack, allSunk}
+  return{place, getBoard, receiveAttack, allSunk, randomPlace}
 }
 
 const Player = (gameboard, name) => {

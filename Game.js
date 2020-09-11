@@ -15,13 +15,22 @@ var Game = function (_React$Component) {
     function Game(props) {
         _classCallCheck(this, Game);
 
+        // player1.gameboard.place(0,0,Ship(3),true);
+        // player1.gameboard.place(2,2,Ship(4),false);
+        // player1.gameboard.place(4,7,Ship(4),true);
+        // player1.gameboard.place(6,1,Ship(4),false);
         var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
-        player1.gameboard.place(0, 0, Ship(3), true);
-        player1.gameboard.place(2, 2, Ship(4), false);
-        player1.gameboard.place(4, 7, Ship(4), true);
-        player1.gameboard.place(6, 1, Ship(4), false);
-        CPU.gameboard.place(6, 7, Ship(4), true);
+        player1.gameboard.randomPlace(Ship(2));
+        player1.gameboard.randomPlace(Ship(3));
+        player1.gameboard.randomPlace(Ship(3));
+        player1.gameboard.randomPlace(Ship(3));
+        player1.gameboard.randomPlace(Ship(5));
+        CPU.gameboard.randomPlace(Ship(2));
+        CPU.gameboard.randomPlace(Ship(3));
+        CPU.gameboard.randomPlace(Ship(3));
+        CPU.gameboard.randomPlace(Ship(3));
+        CPU.gameboard.randomPlace(Ship(5));
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
         // this.getBoard = player1.gameboard.getBoard.bind(this);
         _this.handleClick = _this.handleClick.bind(_this);
