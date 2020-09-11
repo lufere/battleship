@@ -1,6 +1,6 @@
 const Ship = (inputLength) => {
   let length;
-  if(inputLength > 4){length = 4} else if(inputLength < 1){length = 1;} else {length = inputLength;}
+  if(inputLength > 5){length = 5} else if(inputLength < 2){length = 2;} else {length = inputLength;}
   let health = [];
   health = Array(length).fill(true);
   const hit = (pos) =>{
@@ -30,7 +30,7 @@ const Gameboard = () => {
     horizontal ? available = 10-x : available = 10-y;
     for (let i = 0; i < ship.length; i++) {
       if(horizontal==true && board[pos+i] != null) valid = false;
-      if(horizontal==true && board[pos+i] != null) valid = false;
+      if(horizontal==false && board[pos+(i*10)] != null) valid = false;
     }
     if(horizontal === true && available >= ship.length && valid==true){
       for (let i = 0; i < ship.length; i++) {
@@ -48,6 +48,10 @@ const Gameboard = () => {
       index++;
       return true
     }
+  }
+
+  const randomPlace = (x, y, ship) =>{
+
   }
 
   const receiveAttack = (x, y) => {

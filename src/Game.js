@@ -6,8 +6,8 @@ class Game extends React.Component{
         super(props);
         player1.gameboard.place(0,0,Ship(3),true);
         player1.gameboard.place(2,2,Ship(4),false);
-        player1.gameboard.place(6,1,Ship(4),false);
         player1.gameboard.place(4,7,Ship(4),true);
+        player1.gameboard.place(6,1,Ship(4),false);
         CPU.gameboard.place(6,7,Ship(4),true);
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
         // this.getBoard = player1.gameboard.getBoard.bind(this);

@@ -5,15 +5,15 @@ const Gameboard = battleship.Gameboard;
 const Player = battleship.Player;
 
 test('Create ships with the correct length', () => {
-  expect(Ship(1).length).toBe(1);
+  expect(Ship(2).length).toBe(2);
 });
 
-test('Max ship length is 4', () => {
-  expect(Ship(999).length).toBe(4);
+test('Max ship length is 5', () => {
+  expect(Ship(999).length).toBe(5);
 });
 
-test('Min ship length is 1', () => {
-  expect(Ship(-999).length).toBe(1);
+test('Min ship length is 2', () => {
+  expect(Ship(-999).length).toBe(2);
 });
 
 test('Create the ship health bar', () => {
