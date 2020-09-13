@@ -29,6 +29,7 @@ var Game = function (_React$Component) {
         _this.handleClick = _this.handleClick.bind(_this);
         _this.checkWinner = _this.checkWinner.bind(_this);
         _this.reset = _this.reset.bind(_this);
+        _this.drop = _this.drop.bind(_this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
@@ -117,6 +118,12 @@ var Game = function (_React$Component) {
             });
         }
     }, {
+        key: "drop",
+        value: function drop(x, y) {
+            alert("X:" + x + " Y:" + y);
+            // alert("test");
+        }
+    }, {
         key: "render",
         value: function render() {
             return React.createElement(
@@ -128,7 +135,8 @@ var Game = function (_React$Component) {
                     React.createElement(Grid, {
                         playerName: "player1",
                         board: this.state.playerGrid,
-                        onClick: this.handleClick
+                        onClick: this.handleClick,
+                        drop: this.drop
                     }),
                     React.createElement(Grid, {
                         playerName: "player2",
@@ -140,7 +148,8 @@ var Game = function (_React$Component) {
                     gameEnd: this.state.gameEnd,
                     winner: this.state.winner,
                     onClick: this.reset
-                })
+                }),
+                React.createElement(Fleet, null)
             );
         }
     }]);
@@ -171,10 +180,40 @@ function GameStatus(props) {
     return null;
 }
 
+function Fleet(props) {
+    function dragStart(e) {
+        var target = e.target;
+
+        e.dataTransfer.setData('ship_id', target.id);
+
+        // setTimeout(() => {
+        //     target.style.display = "none";
+        // }, 0);
+    }
+
+    function dragOver(e) {
+        e.stopPropagation();
+    }
+    return React.createElement("div", {
+        id: "1",
+        draggable: true,
+        onDragStart: dragStart,
+        onDragOver: dragOver,
+        className: ["square", "healthyShip"].join(" ")
+    });
+}
+
 function Square(props) {
+    function dragOver(e) {
+        e.preventDefault();
+    }
+
     return React.createElement("button", {
         className: ["square", props.squareClass].join(" "),
-        onClick: props.onClick });
+        onClick: props.onClick,
+        onDrop: props.drop,
+        onDragOver: dragOver
+    });
 }
 
 var Grid = function (_React$Component2) {
@@ -203,7 +242,11 @@ var Grid = function (_React$Component2) {
                 onClick: function onClick() {
                     return _this4.props.onClick(x, y, _this4.props.playerName, _this4.props.board[i]);
                 },
-                key: i
+                key: i,
+                drop: function drop() {
+                    return _this4.props.drop(x, y);
+                },
+                onDragOver: this.dragOver
             });
         }
     }, {

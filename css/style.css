@@ -86,7 +86,8 @@
 }
 
 .miss{
-    background-color: black;
+    background-color: rgb(21, 132, 201);
+    /* background-color: black; */
 }
 
 .hitShip{

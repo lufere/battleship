@@ -16,6 +16,7 @@ class Game extends React.Component{
         this.handleClick = this.handleClick.bind(this);
         this.checkWinner = this.checkWinner.bind(this);
         this.reset = this.reset.bind(this);
+        this.drop = this.drop.bind(this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
             this.state = {
                 userTurn: true,
@@ -94,6 +95,11 @@ class Game extends React.Component{
         });
     }
 
+    drop(x,y){
+        alert("X:"+x+" Y:"+ y);
+        // alert("test");
+    }
+
     render(){
         return(
             <div>
@@ -102,6 +108,7 @@ class Game extends React.Component{
                         playerName = {"player1"}
                         board = {this.state.playerGrid}
                         onClick = {this.handleClick}
+                        drop = {this.drop}
                     />
                     <Grid
                         playerName = {"player2"}
@@ -114,6 +121,7 @@ class Game extends React.Component{
                     winner = {this.state.winner}
                     onClick = {this.reset}
                 />
+                <Fleet/>
             </div>
         );
     }
@@ -135,11 +143,48 @@ function GameStatus(props){
     return null
 }
 
+function Fleet(props){
+    function dragStart(e){
+        const target = e.target;
+
+        e.dataTransfer.setData('ship_id', target.id);
+
+        // setTimeout(() => {
+        //     target.style.display = "none";
+        // }, 0);
+    }
+    
+    function dragOver(e){
+        e.stopPropagation();
+    }
+    return(
+        <div
+            id = {"1"}
+            draggable = {true}
+            onDragStart = {dragStart}
+            onDragOver = {dragOver}
+            className={["square", "healthyShip"].join(" ")}
+        >
+            {/* <button 
+            className={["square", "healthyShip"].join(" ")}
+            >
+            </button> */}
+        </div>
+    )
+}
+
 function Square(props) {
+    function dragOver(e){
+        e.preventDefault();
+    }
+
     return (
       <button 
       className={["square", props.squareClass].join(" ")}
-      onClick={props.onClick}>
+      onClick={props.onClick}
+      onDrop = {props.drop}
+      onDragOver = {dragOver}
+      >
         {/* {props.value} */}
       </button>
     );
@@ -159,6 +204,8 @@ class Grid extends React.Component{
             value={this.props.board[i]}
             onClick={() => this.props.onClick(x,y,this.props.playerName,this.props.board[i])}
             key = {i}
+            drop = {() => this.props.drop(x,y)}
+            onDragOver = {this.dragOver}
           />
         );
     }
