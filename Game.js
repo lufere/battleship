@@ -121,10 +121,11 @@ var Game = function (_React$Component) {
         key: "drop",
         value: function drop(e, x, y) {
             // alert("X:"+x+" Y:"+ y);
-            var valid = player1.gameboard.place(x, y, Ship(3), true);
             var ship_id = e.dataTransfer.getData('ship_id');
-            // alert(ship_id);
-            if (valid) document.getElementById(ship_id).style.display = "none";
+            var ship_length = e.dataTransfer.getData('ship_length');
+            var valid = player1.gameboard.place(x, y, Ship(ship_length), true);
+            // alert(ship_length);
+            if (!valid) document.getElementById(ship_id).style.display = "flex";
             this.setState({
                 playerGrid: player1.gameboard.getBoard()
             });
@@ -155,7 +156,26 @@ var Game = function (_React$Component) {
                     winner: this.state.winner,
                     onClick: this.reset
                 }),
-                React.createElement(Fleet, null)
+                React.createElement(Fleet, {
+                    length: 2,
+                    id: "1"
+                }),
+                React.createElement(Fleet, {
+                    length: 3,
+                    id: "2"
+                }),
+                React.createElement(Fleet, {
+                    length: 3,
+                    id: "3"
+                }),
+                React.createElement(Fleet, {
+                    length: 4,
+                    id: "4"
+                }),
+                React.createElement(Fleet, {
+                    length: 5,
+                    id: "5"
+                })
             );
         }
     }]);
@@ -192,22 +212,35 @@ function Fleet(props) {
 
         // e.dataTransfer.setData('targe', target);
         e.dataTransfer.setData('ship_id', target.id);
+        e.dataTransfer.setData('ship_length', target.dataset.length);
 
-        // setTimeout(() => {
-        //     target.style.display = "none";
-        // }, 0);
+        setTimeout(function () {
+            target.style.display = "none";
+        }, 0);
+    }
+
+    var shipBody = [];
+    for (var i = 0; i < props.length; i++) {
+        shipBody.push(React.createElement("div", {
+            className: "square healthyShip"
+        }));
     }
 
     function dragOver(e) {
         e.stopPropagation();
     }
-    return React.createElement("div", {
-        id: "testid",
-        draggable: true,
-        onDragStart: dragStart,
-        onDragOver: dragOver,
-        className: ["square", "healthyShip"].join(" ")
-    });
+    return React.createElement(
+        "div",
+        {
+            id: props.id,
+            "data-length": props.length,
+            draggable: true,
+            onDragStart: dragStart,
+            onDragOver: dragOver,
+            className: "selectableShip"
+        },
+        shipBody
+    );
 }
 
 function Square(props) {

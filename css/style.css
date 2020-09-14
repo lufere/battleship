@@ -93,3 +93,9 @@
 .hitShip{
     background-color: orangered;
 }
+
+.selectableShip{
+    display: flex;
+    margin-bottom: 20px;
+    /* height: 100px; */
+}

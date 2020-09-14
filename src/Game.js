@@ -97,10 +97,11 @@ class Game extends React.Component{
 
     drop(e, x, y){
         // alert("X:"+x+" Y:"+ y);
-        let valid = player1.gameboard.place(x,y,Ship(3),true);
         let ship_id = e.dataTransfer.getData('ship_id');
-        // alert(ship_id);
-        if(valid)document.getElementById(ship_id).style.display = "none";
+        let ship_length = e.dataTransfer.getData('ship_length');
+        let valid = player1.gameboard.place(x,y,Ship(ship_length),true);
+        // alert(ship_length);
+        if(!valid)document.getElementById(ship_id).style.display = "flex";
         this.setState({
             playerGrid: player1.gameboard.getBoard(),
         });
@@ -127,7 +128,28 @@ class Game extends React.Component{
                     winner = {this.state.winner}
                     onClick = {this.reset}
                 />
-                <Fleet/>
+                    <Fleet
+                        length = {2}
+                        id = {"1"}
+                    />
+                    <Fleet
+                        length = {3}
+                        id = {"2"}
+                    />
+                    <Fleet
+                        length = {3}
+                        id = {"3"}
+                    />
+                    <Fleet
+                        length = {4}
+                        id = {"4"}
+                    />
+                    <Fleet
+                        length = {5}
+                        id = {"5"}
+                    />
+
+
             </div>
         );
     }
@@ -155,10 +177,21 @@ function Fleet(props){
 
         // e.dataTransfer.setData('targe', target);
         e.dataTransfer.setData('ship_id', target.id);
+        e.dataTransfer.setData('ship_length', target.dataset.length);
 
-        // setTimeout(() => {
-        //     target.style.display = "none";
-        // }, 0);
+        setTimeout(() => {
+            target.style.display = "none";
+        }, 0);
+    }
+
+    let shipBody = [];
+    for (let i = 0; i < props.length; i++) {
+        shipBody.push(
+        <div
+            className = {"square healthyShip"}
+        />
+        );
+        
     }
     
     function dragOver(e){
@@ -166,12 +199,14 @@ function Fleet(props){
     }
     return(
         <div
-            id = {"testid"}
+            id = {props.id}
+            data-length = {props.length}
             draggable = {true}
             onDragStart = {dragStart}
             onDragOver = {dragOver}
-            className={["square", "healthyShip"].join(" ")}
+            className={"selectableShip"}
         >
+        {shipBody}
             {/* <button 
             className={["square", "healthyShip"].join(" ")}
             >
