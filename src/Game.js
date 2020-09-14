@@ -5,10 +5,11 @@ class Game extends React.Component{
     constructor(props){
         super(props);
         // player1.gameboard.place(0,0,Ship(3),true);
+        // CPU.gameboard.place(0,0,Ship(3),true);
         // player1.gameboard.place(2,2,Ship(4),false);
         // player1.gameboard.place(4,7,Ship(4),true);
         // player1.gameboard.place(6,1,Ship(4),false);
-        player1.gameboard.randomSetup();
+        // player1.gameboard.randomSetup();
         CPU.gameboard.randomSetup();
         // CPU.gameboard.clearBoard();
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
@@ -25,13 +26,15 @@ class Game extends React.Component{
                 cpuGrid: CPU.gameboard.getBoard(),
                 gameEnd: false,
                 winner: null,
-                multiplayer: false
+                multiplayer: false,
+                shipCount: 0,
+                placingPhase: true,
         };
     }
 
     handleClick(x,y,player,value){
         // this.receiveAttack(x,y);
-        if(value != "m" && value != "h" && this.state.gameEnd == false){
+        if(value != "m" && value != "h" && this.state.gameEnd == false && this.state.placingPhase == false){
             if(player === "player1" && this.state.userTurn === false){
                 player1.gameboard.receiveAttack(x,y);
                 this.setState({
@@ -85,14 +88,22 @@ class Game extends React.Component{
     reset(){
         player1.gameboard.clearBoard();
         CPU.gameboard.clearBoard();
-        player1.gameboard.randomSetup();
+        // player1.gameboard.randomSetup();
         CPU.gameboard.randomSetup();
+        // console.log(document.getElementsByClassName("fleet"))
+        // console.log(document.getElementsByClassName("fleet")[0])
+        // document.getElementById("1").style.display = "flex";
+        document.querySelectorAll(".selectableShip").forEach(e =>{
+            e.style.display = "flex";
+        });
         this.setState({
             playerGrid: player1.gameboard.getBoard(),
             cpuGrid: CPU.gameboard.getBoard(),
             gameEnd: false,
             winner: null,
             userTurn: true,
+            placingPhase: true,
+            shipCount: 0,
         });
     }
 
@@ -103,9 +114,13 @@ class Game extends React.Component{
         let valid = player1.gameboard.place(x,y,Ship(ship_length),true);
         // alert(ship_length);
         if(!valid)document.getElementById(ship_id).style.display = "flex";
-        this.setState({
+        if(valid)this.setState({
             playerGrid: player1.gameboard.getBoard(),
+            shipCount: this.state.shipCount + 1,
+        },()=>{
+            if(this.state.shipCount == 5) this.setState({placingPhase:false});
         });
+        // if(this.state.shipCount == 5) this.setState({placingPhase:false});
     }
 
     disabledDrop(e){
@@ -200,6 +215,7 @@ function Fleet(props){
         shipBody.push(
         <div
             className = {"square healthyShip"}
+            key = {i}
         />
         );
         

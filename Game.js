@@ -16,12 +16,13 @@ var Game = function (_React$Component) {
         _classCallCheck(this, Game);
 
         // player1.gameboard.place(0,0,Ship(3),true);
+        // CPU.gameboard.place(0,0,Ship(3),true);
         // player1.gameboard.place(2,2,Ship(4),false);
         // player1.gameboard.place(4,7,Ship(4),true);
         // player1.gameboard.place(6,1,Ship(4),false);
+        // player1.gameboard.randomSetup();
         var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
-        player1.gameboard.randomSetup();
         CPU.gameboard.randomSetup();
         // CPU.gameboard.clearBoard();
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
@@ -38,7 +39,9 @@ var Game = function (_React$Component) {
             cpuGrid: CPU.gameboard.getBoard(),
             gameEnd: false,
             winner: null,
-            multiplayer: false
+            multiplayer: false,
+            shipCount: 0,
+            placingPhase: true
         };
         return _this;
     }
@@ -47,7 +50,7 @@ var Game = function (_React$Component) {
         key: "handleClick",
         value: function handleClick(x, y, player, value) {
             // this.receiveAttack(x,y);
-            if (value != "m" && value != "h" && this.state.gameEnd == false) {
+            if (value != "m" && value != "h" && this.state.gameEnd == false && this.state.placingPhase == false) {
                 if (player === "player1" && this.state.userTurn === false) {
                     player1.gameboard.receiveAttack(x, y);
                     this.setState({
@@ -108,28 +111,42 @@ var Game = function (_React$Component) {
         value: function reset() {
             player1.gameboard.clearBoard();
             CPU.gameboard.clearBoard();
-            player1.gameboard.randomSetup();
+            // player1.gameboard.randomSetup();
             CPU.gameboard.randomSetup();
+            // console.log(document.getElementsByClassName("fleet"))
+            // console.log(document.getElementsByClassName("fleet")[0])
+            // document.getElementById("1").style.display = "flex";
+            document.querySelectorAll(".selectableShip").forEach(function (e) {
+                e.style.display = "flex";
+            });
             this.setState({
                 playerGrid: player1.gameboard.getBoard(),
                 cpuGrid: CPU.gameboard.getBoard(),
                 gameEnd: false,
                 winner: null,
-                userTurn: true
+                userTurn: true,
+                placingPhase: true,
+                shipCount: 0
             });
         }
     }, {
         key: "drop",
         value: function drop(e, x, y) {
+            var _this3 = this;
+
             // alert("X:"+x+" Y:"+ y);
             var ship_id = e.dataTransfer.getData('ship_id');
             var ship_length = e.dataTransfer.getData('ship_length');
             var valid = player1.gameboard.place(x, y, Ship(ship_length), true);
             // alert(ship_length);
             if (!valid) document.getElementById(ship_id).style.display = "flex";
-            this.setState({
-                playerGrid: player1.gameboard.getBoard()
+            if (valid) this.setState({
+                playerGrid: player1.gameboard.getBoard(),
+                shipCount: this.state.shipCount + 1
+            }, function () {
+                if (_this3.state.shipCount == 5) _this3.setState({ placingPhase: false });
             });
+            // if(this.state.shipCount == 5) this.setState({placingPhase:false});
         }
     }, {
         key: "disabledDrop",
@@ -233,7 +250,8 @@ function Fleet(props) {
     var shipBody = [];
     for (var i = 0; i < props.length; i++) {
         shipBody.push(React.createElement("div", {
-            className: "square healthyShip"
+            className: "square healthyShip",
+            key: i
         }));
     }
 
@@ -280,7 +298,7 @@ var Grid = function (_React$Component2) {
     _createClass(Grid, [{
         key: "renderSquare",
         value: function renderSquare(i) {
-            var _this4 = this;
+            var _this5 = this;
 
             var squareClass = "water";
             if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "healthyShip";
@@ -292,11 +310,11 @@ var Grid = function (_React$Component2) {
                 squareClass: squareClass,
                 value: this.props.board[i],
                 onClick: function onClick() {
-                    return _this4.props.onClick(x, y, _this4.props.playerName, _this4.props.board[i]);
+                    return _this5.props.onClick(x, y, _this5.props.playerName, _this5.props.board[i]);
                 },
                 key: i,
                 onDrop: function onDrop(e) {
-                    return _this4.props.onDrop(e, x, y);
+                    return _this5.props.onDrop(e, x, y);
                 },
                 onDragOver: this.dragOver
             });
