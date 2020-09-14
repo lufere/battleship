@@ -30,6 +30,7 @@ var Game = function (_React$Component) {
         _this.checkWinner = _this.checkWinner.bind(_this);
         _this.reset = _this.reset.bind(_this);
         _this.drop = _this.drop.bind(_this);
+        _this.disabledDrop = _this.disabledDrop.bind(_this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
@@ -131,6 +132,15 @@ var Game = function (_React$Component) {
             });
         }
     }, {
+        key: "disabledDrop",
+        value: function disabledDrop(e) {
+            var ship_id = e.dataTransfer.getData('ship_id');
+            document.getElementById(ship_id).style.display = "flex";
+            this.setState({
+                playerGrid: player1.gameboard.getBoard()
+            });
+        }
+    }, {
         key: "render",
         value: function render() {
             return React.createElement(
@@ -148,7 +158,8 @@ var Game = function (_React$Component) {
                     React.createElement(Grid, {
                         playerName: "player2",
                         board: this.state.cpuGrid,
-                        onClick: this.handleClick
+                        onClick: this.handleClick,
+                        onDrop: this.disabledDrop
                     })
                 ),
                 React.createElement(GameStatus, {

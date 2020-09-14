@@ -17,6 +17,7 @@ class Game extends React.Component{
         this.checkWinner = this.checkWinner.bind(this);
         this.reset = this.reset.bind(this);
         this.drop = this.drop.bind(this);
+        this.disabledDrop = this.disabledDrop.bind(this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
             this.state = {
                 userTurn: true,
@@ -107,6 +108,15 @@ class Game extends React.Component{
         });
     }
 
+    disabledDrop(e){
+        let ship_id = e.dataTransfer.getData('ship_id');
+        document.getElementById(ship_id).style.display = "flex";
+        this.setState({
+            playerGrid: player1.gameboard.getBoard(),
+        });
+    }
+
+
     render(){
         return(
             <div>
@@ -121,6 +131,7 @@ class Game extends React.Component{
                         playerName = {"player2"}
                         board = {this.state.cpuGrid}
                         onClick = {this.handleClick}
+                        onDrop = {this.disabledDrop}
                     />
                 </div>
                 <GameStatus
