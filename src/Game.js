@@ -95,9 +95,15 @@ class Game extends React.Component{
         });
     }
 
-    drop(x,y){
-        alert("X:"+x+" Y:"+ y);
-        // alert("test");
+    drop(e, x, y){
+        // alert("X:"+x+" Y:"+ y);
+        let valid = player1.gameboard.place(x,y,Ship(3),true);
+        let ship_id = e.dataTransfer.getData('ship_id');
+        // alert(ship_id);
+        if(valid)document.getElementById(ship_id).style.display = "none";
+        this.setState({
+            playerGrid: player1.gameboard.getBoard(),
+        });
     }
 
     render(){
@@ -108,7 +114,7 @@ class Game extends React.Component{
                         playerName = {"player1"}
                         board = {this.state.playerGrid}
                         onClick = {this.handleClick}
-                        drop = {this.drop}
+                        onDrop = {this.drop}
                     />
                     <Grid
                         playerName = {"player2"}
@@ -147,6 +153,7 @@ function Fleet(props){
     function dragStart(e){
         const target = e.target;
 
+        // e.dataTransfer.setData('targe', target);
         e.dataTransfer.setData('ship_id', target.id);
 
         // setTimeout(() => {
@@ -159,7 +166,7 @@ function Fleet(props){
     }
     return(
         <div
-            id = {"1"}
+            id = {"testid"}
             draggable = {true}
             onDragStart = {dragStart}
             onDragOver = {dragOver}
@@ -182,7 +189,8 @@ function Square(props) {
       <button 
       className={["square", props.squareClass].join(" ")}
       onClick={props.onClick}
-      onDrop = {props.drop}
+      onDrop = {props.onDrop}
+    //   onDrop = {(e) => props.onDrop}
       onDragOver = {dragOver}
       >
         {/* {props.value} */}
@@ -204,7 +212,7 @@ class Grid extends React.Component{
             value={this.props.board[i]}
             onClick={() => this.props.onClick(x,y,this.props.playerName,this.props.board[i])}
             key = {i}
-            drop = {() => this.props.drop(x,y)}
+            onDrop = {(e) => this.props.onDrop(e,x,y)}
             onDragOver = {this.dragOver}
           />
         );

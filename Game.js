@@ -119,9 +119,15 @@ var Game = function (_React$Component) {
         }
     }, {
         key: "drop",
-        value: function drop(x, y) {
-            alert("X:" + x + " Y:" + y);
-            // alert("test");
+        value: function drop(e, x, y) {
+            // alert("X:"+x+" Y:"+ y);
+            var valid = player1.gameboard.place(x, y, Ship(3), true);
+            var ship_id = e.dataTransfer.getData('ship_id');
+            // alert(ship_id);
+            if (valid) document.getElementById(ship_id).style.display = "none";
+            this.setState({
+                playerGrid: player1.gameboard.getBoard()
+            });
         }
     }, {
         key: "render",
@@ -136,7 +142,7 @@ var Game = function (_React$Component) {
                         playerName: "player1",
                         board: this.state.playerGrid,
                         onClick: this.handleClick,
-                        drop: this.drop
+                        onDrop: this.drop
                     }),
                     React.createElement(Grid, {
                         playerName: "player2",
@@ -184,6 +190,7 @@ function Fleet(props) {
     function dragStart(e) {
         var target = e.target;
 
+        // e.dataTransfer.setData('targe', target);
         e.dataTransfer.setData('ship_id', target.id);
 
         // setTimeout(() => {
@@ -195,7 +202,7 @@ function Fleet(props) {
         e.stopPropagation();
     }
     return React.createElement("div", {
-        id: "1",
+        id: "testid",
         draggable: true,
         onDragStart: dragStart,
         onDragOver: dragOver,
@@ -211,8 +218,9 @@ function Square(props) {
     return React.createElement("button", {
         className: ["square", props.squareClass].join(" "),
         onClick: props.onClick,
-        onDrop: props.drop,
-        onDragOver: dragOver
+        onDrop: props.onDrop
+        //   onDrop = {(e) => props.onDrop}
+        , onDragOver: dragOver
     });
 }
 
@@ -243,8 +251,8 @@ var Grid = function (_React$Component2) {
                     return _this4.props.onClick(x, y, _this4.props.playerName, _this4.props.board[i]);
                 },
                 key: i,
-                drop: function drop() {
-                    return _this4.props.drop(x, y);
+                onDrop: function onDrop(e) {
+                    return _this4.props.onDrop(e, x, y);
                 },
                 onDragOver: this.dragOver
             });
