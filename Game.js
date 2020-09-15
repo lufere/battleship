@@ -182,6 +182,8 @@ var Game = function (_React$Component) {
                 React.createElement(GameStatus, {
                     gameEnd: this.state.gameEnd,
                     winner: this.state.winner,
+                    placingPhase: this.state.placingPhase,
+                    userTurn: this.state.userTurn,
                     onClick: this.reset
                 }),
                 React.createElement(Fleet, {
@@ -212,6 +214,18 @@ var Game = function (_React$Component) {
 }(React.Component);
 
 function GameStatus(props) {
+    var status = void 0;
+    // if(props.gameEnd == true) status = <p>{props.winner} wins!</p>
+    if (props.placingPhase) status = React.createElement(
+        "p",
+        null,
+        "Place your ships"
+    );
+    if (!props.placingPhase && props.userTurn) status = React.createElement(
+        "p",
+        null,
+        "Player 1's turn"
+    );
     if (props.gameEnd == true) {
         return React.createElement(
             "div",
@@ -230,8 +244,13 @@ function GameStatus(props) {
                 "Play again?"
             )
         );
+    } else {
+        return React.createElement(
+            "div",
+            { id: "status" },
+            status
+        );
     }
-    return null;
 }
 
 function Fleet(props) {

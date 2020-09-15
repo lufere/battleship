@@ -152,6 +152,8 @@ class Game extends React.Component{
                 <GameStatus
                     gameEnd = {this.state.gameEnd}
                     winner = {this.state.winner}
+                    placingPhase = {this.state.placingPhase}
+                    userTurn = {this.state.userTurn}
                     onClick = {this.reset}
                 />
                     <Fleet
@@ -174,14 +176,16 @@ class Game extends React.Component{
                         length = {5}
                         id = {"5"}
                     />
-
-
             </div>
         );
     }
 }
 
 function GameStatus(props){
+    let status;
+    // if(props.gameEnd == true) status = <p>{props.winner} wins!</p>
+    if(props.placingPhase) status = <p>Place your ships</p>
+    if(!props.placingPhase && props.userTurn) status = <p>Player 1's turn</p>
     if(props.gameEnd == true){
         return(
             <div id = "status">
@@ -193,8 +197,13 @@ function GameStatus(props){
                 </button>
             </div>
         )
+    }else{
+        return(
+            <div id = "status">
+                {status}
+            </div>
+        )
     }
-    return null
 }
 
 function Fleet(props){

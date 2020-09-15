@@ -42,6 +42,7 @@
     flex-flow: column;
     font-size: 30px;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 #status button{
