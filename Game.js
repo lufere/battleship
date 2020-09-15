@@ -32,6 +32,7 @@ var Game = function (_React$Component) {
         _this.reset = _this.reset.bind(_this);
         _this.drop = _this.drop.bind(_this);
         _this.disabledDrop = _this.disabledDrop.bind(_this);
+        _this.chooseMode = _this.chooseMode.bind(_this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
@@ -41,7 +42,8 @@ var Game = function (_React$Component) {
             winner: null,
             multiplayer: false,
             shipCount: 0,
-            placingPhase: true
+            placingPhase: true,
+            menu: true
         };
         return _this;
     }
@@ -158,8 +160,26 @@ var Game = function (_React$Component) {
             });
         }
     }, {
+        key: "chooseMode",
+        value: function chooseMode(mode) {
+            if (mode == "sp") this.setState({ menu: false });
+        }
+    }, {
         key: "render",
         value: function render() {
+            if (this.state.menu) {
+                return (
+                    // <div>
+                    //     PLACEHOLDER
+                    //     <button
+                    //         onClick = {this.chooseMode}
+                    //     />
+                    // </div>
+                    React.createElement(GameMenu, {
+                        onClick: this.chooseMode
+                    })
+                );
+            }
             return React.createElement(
                 "div",
                 null,
@@ -186,32 +206,58 @@ var Game = function (_React$Component) {
                     userTurn: this.state.userTurn,
                     onClick: this.reset
                 }),
-                React.createElement(Fleet, {
-                    length: 2,
-                    id: "1"
-                }),
-                React.createElement(Fleet, {
-                    length: 3,
-                    id: "2"
-                }),
-                React.createElement(Fleet, {
-                    length: 3,
-                    id: "3"
-                }),
-                React.createElement(Fleet, {
-                    length: 4,
-                    id: "4"
-                }),
-                React.createElement(Fleet, {
-                    length: 5,
-                    id: "5"
-                })
+                React.createElement(Fleet, { length: 2, id: "1" }),
+                React.createElement(Fleet, { length: 3, id: "2" }),
+                React.createElement(Fleet, { length: 3, id: "3" }),
+                React.createElement(Fleet, { length: 4, id: "4" }),
+                React.createElement(Fleet, { length: 5, id: "5" })
             );
         }
     }]);
 
     return Game;
 }(React.Component);
+
+function GameMenu(props) {
+    return React.createElement(
+        "div",
+        { id: "menu" },
+        React.createElement(
+            "h1",
+            null,
+            "Battleship.js"
+        ),
+        React.createElement(
+            "button",
+            {
+                onClick: function onClick() {
+                    return props.onClick("sp");
+                }
+            },
+            "Single Player"
+        ),
+        React.createElement(
+            "button",
+            {
+                onClick: function onClick() {
+                    return props.onClick("mp");
+                },
+                className: "unavailable"
+            },
+            "Local multiplayer"
+        ),
+        React.createElement(
+            "button",
+            {
+                onClick: function onClick() {
+                    return props.onClick("omp");
+                },
+                className: "unavailable"
+            },
+            "Online multiplayer"
+        )
+    );
+}
 
 function GameStatus(props) {
     var status = void 0;

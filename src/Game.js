@@ -19,6 +19,7 @@ class Game extends React.Component{
         this.reset = this.reset.bind(this);
         this.drop = this.drop.bind(this);
         this.disabledDrop = this.disabledDrop.bind(this);
+        this.chooseMode = this.chooseMode.bind(this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
             this.state = {
                 userTurn: true,
@@ -29,6 +30,7 @@ class Game extends React.Component{
                 multiplayer: false,
                 shipCount: 0,
                 placingPhase: true,
+                menu: true,
         };
     }
 
@@ -131,8 +133,24 @@ class Game extends React.Component{
         });
     }
 
+    chooseMode(mode){
+        if(mode == "sp") this.setState({menu:false});
+    }
 
     render(){
+        if(this.state.menu){
+            return(
+                // <div>
+                //     PLACEHOLDER
+                //     <button
+                //         onClick = {this.chooseMode}
+                //     />
+                // </div>
+                <GameMenu
+                    onClick = {this.chooseMode}
+                />
+            )
+        }
         return(
             <div>
                 <div id = "boards">
@@ -156,29 +174,39 @@ class Game extends React.Component{
                     userTurn = {this.state.userTurn}
                     onClick = {this.reset}
                 />
-                    <Fleet
-                        length = {2}
-                        id = {"1"}
-                    />
-                    <Fleet
-                        length = {3}
-                        id = {"2"}
-                    />
-                    <Fleet
-                        length = {3}
-                        id = {"3"}
-                    />
-                    <Fleet
-                        length = {4}
-                        id = {"4"}
-                    />
-                    <Fleet
-                        length = {5}
-                        id = {"5"}
-                    />
+                    <Fleet length = {2} id = {"1"}/>
+                    <Fleet length = {3} id = {"2"}/>
+                    <Fleet length = {3} id = {"3"}/>
+                    <Fleet length = {4} id = {"4"}/>
+                    <Fleet length = {5} id = {"5"}/>
             </div>
         );
     }
+}
+
+function GameMenu(props){
+    return(
+        <div id = "menu">
+            <h1>Battleship.js</h1>
+            <button
+                onClick = {() => props.onClick("sp")}
+            >
+                Single Player
+            </button>
+            <button
+                onClick = {() => props.onClick("mp")}
+                className = "unavailable"
+            >
+                Local multiplayer
+            </button>
+            <button
+                onClick = {() => props.onClick("omp")}
+                className = "unavailable"
+            >
+                Online multiplayer
+            </button>
+        </div>
+    )
 }
 
 function GameStatus(props){

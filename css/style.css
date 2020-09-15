@@ -100,3 +100,25 @@
     margin-bottom: 20px;
     /* height: 100px; */
 }
+
+h1{
+    font-size: 100px;
+    margin: 30px 0;
+}
+
+#menu{
+    /* border: 1px solid red; */
+    height: auto;
+}
+
+#menu button{
+    background-color: gray;
+    color: white;
+    margin-bottom: 30px;
+    border: none;
+    font-size: 20px;
+}
+
+#menu .unavailable{
+    background-color: rgb(68, 68, 68);
+}
