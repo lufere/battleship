@@ -187,7 +187,9 @@ class Game extends React.Component{
 function GameMenu(props){
     return(
         <div id = "menu">
-            <h1>Battleship.js</h1>
+            <h1 className = "z-text" className = "hero-text">
+            Battleship.js🚢
+            </h1>
             <button
                 onClick = {() => props.onClick("sp")}
             >
@@ -365,4 +367,13 @@ class Grid extends React.Component{
 
 let domContainer = document.querySelector('#game');
 ReactDOM.render(<Game/>, domContainer);
+
+var ztxt = new Ztextify(".hero-text", {
+    depth: "30px",
+    layers: 20,
+    // fade: true,
+    direction: "forwards",
+    event: "pointer",
+    // eventRotation: "35deg"
+ });
 
