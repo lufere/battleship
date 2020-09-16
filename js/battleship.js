@@ -111,7 +111,7 @@ const Gameboard = () => {
     });
   }
 
-  return{place, getBoard, receiveAttack, allSunk, randomPlace, clearBoard, randomSetup}
+  return{place, getBoard, receiveAttack, allSunk, randomPlace, clearBoard, randomSetup, ships}
 }
 
 const Player = (gameboard, name) => {

@@ -88,6 +88,23 @@ body, html{
     background-color: lightslategray;
 }
 
+.first{
+    border-left-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}
+
+.last{
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}
+
+.mid{
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}
+
 .miss{
     background-color: rgb(21, 132, 201);
     /* background-color: black; */

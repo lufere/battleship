@@ -45,7 +45,9 @@ var Game = function (_React$Component) {
             multiplayer: false,
             shipCount: 0,
             placingPhase: true,
-            menu: true
+            menu: true,
+            ships: player1.gameboard.ships,
+            cpuShips: CPU.gameboard.ships
         };
         return _this;
     }
@@ -146,9 +148,11 @@ var Game = function (_React$Component) {
             if (!valid) document.getElementById(ship_id).style.display = "flex";
             if (valid) this.setState({
                 playerGrid: player1.gameboard.getBoard(),
-                shipCount: this.state.shipCount + 1
+                shipCount: this.state.shipCount + 1,
+                ships: player1.gameboard.ships
             }, function () {
                 if (_this3.state.shipCount == 5) _this3.setState({ placingPhase: false });
+                console.log(_this3.state.ships);
             });
             // if(this.state.shipCount == 5) this.setState({placingPhase:false});
         }
@@ -170,17 +174,9 @@ var Game = function (_React$Component) {
         key: "render",
         value: function render() {
             if (this.state.menu) {
-                return (
-                    // <div>
-                    //     PLACEHOLDER
-                    //     <button
-                    //         onClick = {this.chooseMode}
-                    //     />
-                    // </div>
-                    React.createElement(GameMenu, {
-                        onClick: this.chooseMode
-                    })
-                );
+                return React.createElement(GameMenu, {
+                    onClick: this.chooseMode
+                });
             }
             return React.createElement(
                 "div",
@@ -192,13 +188,15 @@ var Game = function (_React$Component) {
                         playerName: "player1",
                         board: this.state.playerGrid,
                         onClick: this.handleClick,
-                        onDrop: this.drop
+                        onDrop: this.drop,
+                        ships: this.state.ships
                     }),
                     React.createElement(Grid, {
                         playerName: "player2",
                         board: this.state.cpuGrid,
                         onClick: this.handleClick,
-                        onDrop: this.disabledDrop
+                        onDrop: this.disabledDrop,
+                        ships: this.state.cpuShips
                     })
                 ),
                 React.createElement(GameStatus, {
@@ -272,7 +270,7 @@ function GameStatus(props) {
     if (!props.placingPhase && props.userTurn) status = React.createElement(
         "p",
         null,
-        "Player 1's turn"
+        "It's your turn"
     );
     if (props.gameEnd == true) {
         return React.createElement(
@@ -368,7 +366,22 @@ var Grid = function (_React$Component2) {
             var _this5 = this;
 
             var squareClass = "water";
-            if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "healthyShip";
+            // console.log(this.props.ships);
+            if (this.props.playerName == "player1") {
+                if (!isNaN(parseFloat(this.props.board[i]))) {
+                    squareClass = "healthyShip mid";
+                    var id = this.props.board[i].split(".");
+                    // console.log(parseInt(this.props.ships[0].length)+2);
+                    var shipNum = parseInt(id[0]);
+                    var shipPos = parseInt(id[1]);
+                    var shipLength = parseInt(this.props.ships[shipNum].length);
+                    if (shipPos == 0) squareClass = "healthyShip first";
+                    if (shipPos == shipLength - 1) squareClass = "healthyShip last";
+                }
+            }
+            if (this.props.playerName == "player2") {
+                if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "water";
+            }
             if (this.props.board[i] == "m") squareClass = "miss";
             if (this.props.board[i] == "h") squareClass = "hitShip";
             var x = i % 10;

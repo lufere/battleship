@@ -31,6 +31,8 @@ class Game extends React.Component{
                 shipCount: 0,
                 placingPhase: true,
                 menu: true,
+                ships: player1.gameboard.ships,
+                cpuShips: CPU.gameboard.ships,
         };
     }
 
@@ -119,8 +121,10 @@ class Game extends React.Component{
         if(valid)this.setState({
             playerGrid: player1.gameboard.getBoard(),
             shipCount: this.state.shipCount + 1,
+            ships: player1.gameboard.ships,
         },()=>{
             if(this.state.shipCount == 5) this.setState({placingPhase:false});
+            console.log(this.state.ships);
         });
         // if(this.state.shipCount == 5) this.setState({placingPhase:false});
     }
@@ -140,12 +144,6 @@ class Game extends React.Component{
     render(){
         if(this.state.menu){
             return(
-                // <div>
-                //     PLACEHOLDER
-                //     <button
-                //         onClick = {this.chooseMode}
-                //     />
-                // </div>
                 <GameMenu
                     onClick = {this.chooseMode}
                 />
@@ -159,12 +157,14 @@ class Game extends React.Component{
                         board = {this.state.playerGrid}
                         onClick = {this.handleClick}
                         onDrop = {this.drop}
+                        ships = {this.state.ships}
                     />
                     <Grid
                         playerName = {"player2"}
                         board = {this.state.cpuGrid}
                         onClick = {this.handleClick}
                         onDrop = {this.disabledDrop}
+                        ships = {this.state.cpuShips}
                     />
                 </div>
                 <GameStatus
@@ -215,7 +215,7 @@ function GameStatus(props){
     let status;
     // if(props.gameEnd == true) status = <p>{props.winner} wins!</p>
     if(props.placingPhase) status = <p>Place your ships</p>
-    if(!props.placingPhase && props.userTurn) status = <p>Player 1's turn</p>
+    if(!props.placingPhase && props.userTurn) status = <p>It's your turn</p>
     if(props.gameEnd == true){
         return(
             <div id = "status">
@@ -302,7 +302,22 @@ function Square(props) {
 class Grid extends React.Component{
     renderSquare(i) {
         let squareClass = "water";
-        if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "healthyShip";
+        // console.log(this.props.ships);
+        if(this.props.playerName == "player1"){
+            if(!isNaN(parseFloat(this.props.board[i]))){
+                squareClass = "healthyShip mid";
+                let id = this.props.board[i].split(".");
+                // console.log(parseInt(this.props.ships[0].length)+2);
+                let shipNum = parseInt(id[0]);
+                let shipPos = parseInt(id[1]);
+                let shipLength = parseInt(this.props.ships[shipNum].length);
+                if(shipPos == 0) squareClass = "healthyShip first";
+                if (shipPos == shipLength-1) squareClass = "healthyShip last";
+            }
+        }
+        if(this.props.playerName == "player2"){
+            if (!isNaN(parseFloat(this.props.board[i]))) squareClass = "water";
+        }
         if (this.props.board[i] == "m") squareClass = "miss";
         if (this.props.board[i] == "h") squareClass = "hitShip";
         let x = i % 10;
