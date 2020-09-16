@@ -20,6 +20,7 @@ class Game extends React.Component{
         this.drop = this.drop.bind(this);
         this.disabledDrop = this.disabledDrop.bind(this);
         this.chooseMode = this.chooseMode.bind(this);
+        this.rotate = this.rotate.bind(this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
             this.state = {
                 userTurn: true,
@@ -33,6 +34,7 @@ class Game extends React.Component{
                 menu: true,
                 ships: player1.gameboard.ships,
                 cpuShips: CPU.gameboard.ships,
+                placingOrientation: true,
         };
     }
 
@@ -115,7 +117,7 @@ class Game extends React.Component{
         // alert("X:"+x+" Y:"+ y);
         let ship_id = e.dataTransfer.getData('ship_id');
         let ship_length = e.dataTransfer.getData('ship_length');
-        let valid = player1.gameboard.place(x,y,Ship(ship_length),true);
+        let valid = player1.gameboard.place(x,y,Ship(ship_length),this.state.placingOrientation);
         // alert(ship_length);
         if(!valid)document.getElementById(ship_id).style.display = "flex";
         if(valid)this.setState({
@@ -139,6 +141,12 @@ class Game extends React.Component{
 
     chooseMode(mode){
         if(mode == "sp") this.setState({menu:false});
+    }
+
+    rotate(){
+        this.setState(prevState => ({
+            placingOrientation: !prevState.placingOrientation
+        }));
     }
 
     render(){
@@ -174,11 +182,12 @@ class Game extends React.Component{
                     userTurn = {this.state.userTurn}
                     onClick = {this.reset}
                 />
-                    <Fleet length = {2} id = {"1"}/>
-                    <Fleet length = {3} id = {"2"}/>
-                    <Fleet length = {3} id = {"3"}/>
-                    <Fleet length = {4} id = {"4"}/>
-                    <Fleet length = {5} id = {"5"}/>
+                <button className = {"rotate"} onClick = {this.rotate}>Rotate</button>
+                    <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation}/>
+                    <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation}/>
+                    <Fleet length = {3} id = {"3"} horizontal = {this.state.placingOrientation}/>
+                    <Fleet length = {4} id = {"4"} horizontal = {this.state.placingOrientation}/>
+                    <Fleet length = {5} id = {"5"} horizontal = {this.state.placingOrientation}/>
             </div>
         );
     }
@@ -239,7 +248,6 @@ function GameStatus(props){
 function Fleet(props){
     function dragStart(e){
         const target = e.target;
-
         // e.dataTransfer.setData('targe', target);
         e.dataTransfer.setData('ship_id', target.id);
         e.dataTransfer.setData('ship_length', target.dataset.length);
@@ -251,15 +259,22 @@ function Fleet(props){
 
     let shipBody = [];
     for (let i = 0; i < props.length; i++) {
+        let shipClass = "square healthyShip";
+        // if(i==0) shipClass = "square healthyShip start";
+        // if(i==props.length-1) shipClass = "square healthyShip end";
         shipBody.push(
         <div
-            className = {"square healthyShip"}
+            className = {shipClass}
             key = {i}
         />
         );
         
     }
     
+    let orientationClass;
+    if(props.horizontal)orientationClass="selectableShip horizontal"
+    if(!props.horizontal)orientationClass="selectableShip vertical"
+
     function dragOver(e){
         e.stopPropagation();
     }
@@ -270,7 +285,7 @@ function Fleet(props){
             draggable = {true}
             onDragStart = {dragStart}
             onDragOver = {dragOver}
-            className={"selectableShip"}
+            className={orientationClass}
         >
         {shipBody}
             {/* <button 

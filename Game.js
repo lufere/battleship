@@ -35,6 +35,7 @@ var Game = function (_React$Component) {
         _this.drop = _this.drop.bind(_this);
         _this.disabledDrop = _this.disabledDrop.bind(_this);
         _this.chooseMode = _this.chooseMode.bind(_this);
+        _this.rotate = _this.rotate.bind(_this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
@@ -47,7 +48,8 @@ var Game = function (_React$Component) {
             placingPhase: true,
             menu: true,
             ships: player1.gameboard.ships,
-            cpuShips: CPU.gameboard.ships
+            cpuShips: CPU.gameboard.ships,
+            placingOrientation: true
         };
         return _this;
     }
@@ -143,7 +145,7 @@ var Game = function (_React$Component) {
             // alert("X:"+x+" Y:"+ y);
             var ship_id = e.dataTransfer.getData('ship_id');
             var ship_length = e.dataTransfer.getData('ship_length');
-            var valid = player1.gameboard.place(x, y, Ship(ship_length), true);
+            var valid = player1.gameboard.place(x, y, Ship(ship_length), this.state.placingOrientation);
             // alert(ship_length);
             if (!valid) document.getElementById(ship_id).style.display = "flex";
             if (valid) this.setState({
@@ -169,6 +171,15 @@ var Game = function (_React$Component) {
         key: "chooseMode",
         value: function chooseMode(mode) {
             if (mode == "sp") this.setState({ menu: false });
+        }
+    }, {
+        key: "rotate",
+        value: function rotate() {
+            this.setState(function (prevState) {
+                return {
+                    placingOrientation: !prevState.placingOrientation
+                };
+            });
         }
     }, {
         key: "render",
@@ -206,11 +217,16 @@ var Game = function (_React$Component) {
                     userTurn: this.state.userTurn,
                     onClick: this.reset
                 }),
-                React.createElement(Fleet, { length: 2, id: "1" }),
-                React.createElement(Fleet, { length: 3, id: "2" }),
-                React.createElement(Fleet, { length: 3, id: "3" }),
-                React.createElement(Fleet, { length: 4, id: "4" }),
-                React.createElement(Fleet, { length: 5, id: "5" })
+                React.createElement(
+                    "button",
+                    { className: "rotate", onClick: this.rotate },
+                    "Rotate"
+                ),
+                React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation }),
+                React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation }),
+                React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation }),
+                React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation }),
+                React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation })
             );
         }
     }]);
@@ -302,7 +318,6 @@ function GameStatus(props) {
 function Fleet(props) {
     function dragStart(e) {
         var target = e.target;
-
         // e.dataTransfer.setData('targe', target);
         e.dataTransfer.setData('ship_id', target.id);
         e.dataTransfer.setData('ship_length', target.dataset.length);
@@ -314,11 +329,18 @@ function Fleet(props) {
 
     var shipBody = [];
     for (var i = 0; i < props.length; i++) {
+        var shipClass = "square healthyShip";
+        // if(i==0) shipClass = "square healthyShip start";
+        // if(i==props.length-1) shipClass = "square healthyShip end";
         shipBody.push(React.createElement("div", {
-            className: "square healthyShip",
+            className: shipClass,
             key: i
         }));
     }
+
+    var orientationClass = void 0;
+    if (props.horizontal) orientationClass = "selectableShip horizontal";
+    if (!props.horizontal) orientationClass = "selectableShip vertical";
 
     function dragOver(e) {
         e.stopPropagation();
@@ -331,7 +353,7 @@ function Fleet(props) {
             draggable: true,
             onDragStart: dragStart,
             onDragOver: dragOver,
-            className: "selectableShip"
+            className: orientationClass
         },
         shipBody
     );

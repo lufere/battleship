@@ -116,6 +116,20 @@ body, html{
 
 .selectableShip{
     display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    /* height: 100px; */
+}
+.selectableShip.vertical{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    /* height: 100px; */
+}
+
+.selectableShip.vertical{
+    display: flex;
+    flex-direction: column;
     margin-bottom: 20px;
     /* height: 100px; */
 }
@@ -166,4 +180,8 @@ h1 {
  
  .z-layer:not(:first-child) {
     color: #455a64;
+ }
+
+ .rotate{
+     margin-bottom: 20px;
  }
