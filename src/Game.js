@@ -182,12 +182,14 @@ class Game extends React.Component{
                     userTurn = {this.state.userTurn}
                     onClick = {this.reset}
                 />
-                <button className = {"rotate"} onClick = {this.rotate}>Rotate</button>
+                <button className = {"rotate"} onClick = {this.rotate}></button>
+                <div id = "fleetContainer">
                     <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation}/>
                     <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation}/>
                     <Fleet length = {3} id = {"3"} horizontal = {this.state.placingOrientation}/>
                     <Fleet length = {4} id = {"4"} horizontal = {this.state.placingOrientation}/>
                     <Fleet length = {5} id = {"5"} horizontal = {this.state.placingOrientation}/>
+                </div>
             </div>
         );
     }

@@ -217,16 +217,16 @@ var Game = function (_React$Component) {
                     userTurn: this.state.userTurn,
                     onClick: this.reset
                 }),
+                React.createElement("button", { className: "rotate", onClick: this.rotate }),
                 React.createElement(
-                    "button",
-                    { className: "rotate", onClick: this.rotate },
-                    "Rotate"
-                ),
-                React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation }),
-                React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation }),
-                React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation }),
-                React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation }),
-                React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation })
+                    "div",
+                    { id: "fleetContainer" },
+                    React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation }),
+                    React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation }),
+                    React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation }),
+                    React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation }),
+                    React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation })
+                )
             );
         }
     }]);
