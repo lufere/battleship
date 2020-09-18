@@ -21,6 +21,7 @@ class Game extends React.Component{
         this.disabledDrop = this.disabledDrop.bind(this);
         this.chooseMode = this.chooseMode.bind(this);
         this.rotate = this.rotate.bind(this);
+        this.random = this.random.bind(this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
             this.state = {
                 userTurn: true,
@@ -149,6 +150,24 @@ class Game extends React.Component{
         }));
     }
 
+    random(){
+        this.reset();
+        // player1.gameboard.clearBoard();
+        // this.setState({
+        //     playerGrid: player1.gameboard.getBoard(),
+        // });
+        document.querySelectorAll(".selectableShip").forEach(e =>{
+            e.style.display = "none";
+        });
+        player1.gameboard.randomSetup();
+        this.setState({
+            playerGrid: player1.gameboard.getBoard(),
+            placingPhase:false,
+            playerGrid: player1.gameboard.getBoard(),
+        });
+        
+    }
+
     render(){
         if(this.state.menu){
             return(
@@ -166,6 +185,7 @@ class Game extends React.Component{
                         onClick = {this.handleClick}
                         onDrop = {this.drop}
                         ships = {this.state.ships}
+                        horizontal = {this.state.placingOrientation}
                     />
                     <Grid
                         playerName = {"player2"}
@@ -181,8 +201,10 @@ class Game extends React.Component{
                     placingPhase = {this.state.placingPhase}
                     userTurn = {this.state.userTurn}
                     onClick = {this.reset}
+                    rotate = {this.rotate}
+                    random = {this.random}
                 />
-                <button className = {"rotate"} onClick = {this.rotate}></button>
+                {/* <button className = {"rotate"} onClick = {this.rotate}></button> */}
                 <div id = "fleetContainer">
                     <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation}/>
                     <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation}/>
@@ -232,10 +254,21 @@ function GameStatus(props){
             <div id = "status">
                 <p>{props.winner} wins!</p>
                 <button
+                    className = {"playAgain"}
                     onClick = {props.onClick}
                 >
                 Play again?
                 </button>
+            </div>
+        )
+    }else if(props.placingPhase){
+        return(
+            <div id = "status">
+                {status}
+                <div>
+                    <button className = {"rotate"} onClick = {props.rotate}></button>
+                    <button className = {"random"} onClick = {props.random}></button>
+                </div>
             </div>
         )
     }else{
@@ -322,14 +355,18 @@ class Grid extends React.Component{
         // console.log(this.props.ships);
         if(this.props.playerName == "player1"){
             if(!isNaN(parseFloat(this.props.board[i]))){
+                let orientation = " horizontal"
+                // if(!this.props.horizontal) orientation = " vertical"
                 squareClass = "healthyShip mid";
                 let id = this.props.board[i].split(".");
                 // console.log(parseInt(this.props.ships[0].length)+2);
                 let shipNum = parseInt(id[0]);
                 let shipPos = parseInt(id[1]);
-                let shipLength = parseInt(this.props.ships[shipNum].length);
+                let shipLength;
+                if(this.props.ships[shipNum]) shipLength = parseInt(this.props.ships[shipNum].length);
                 if(shipPos == 0) squareClass = "healthyShip first";
                 if (shipPos == shipLength-1) squareClass = "healthyShip last";
+                squareClass = squareClass + orientation
             }
         }
         if(this.props.playerName == "player2"){

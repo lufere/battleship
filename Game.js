@@ -36,6 +36,7 @@ var Game = function (_React$Component) {
         _this.disabledDrop = _this.disabledDrop.bind(_this);
         _this.chooseMode = _this.chooseMode.bind(_this);
         _this.rotate = _this.rotate.bind(_this);
+        _this.random = _this.random.bind(_this);
         // this.receiveAttack = player1.gameboard.receiveAttack(this);
         _this.state = {
             userTurn: true,
@@ -182,6 +183,23 @@ var Game = function (_React$Component) {
             });
         }
     }, {
+        key: "random",
+        value: function random() {
+            this.reset();
+            // player1.gameboard.clearBoard();
+            // this.setState({
+            //     playerGrid: player1.gameboard.getBoard(),
+            // });
+            document.querySelectorAll(".selectableShip").forEach(function (e) {
+                e.style.display = "none";
+            });
+            player1.gameboard.randomSetup();
+            this.setState(_defineProperty({
+                playerGrid: player1.gameboard.getBoard(),
+                placingPhase: false
+            }, "playerGrid", player1.gameboard.getBoard()));
+        }
+    }, {
         key: "render",
         value: function render() {
             if (this.state.menu) {
@@ -200,7 +218,8 @@ var Game = function (_React$Component) {
                         board: this.state.playerGrid,
                         onClick: this.handleClick,
                         onDrop: this.drop,
-                        ships: this.state.ships
+                        ships: this.state.ships,
+                        horizontal: this.state.placingOrientation
                     }),
                     React.createElement(Grid, {
                         playerName: "player2",
@@ -215,9 +234,10 @@ var Game = function (_React$Component) {
                     winner: this.state.winner,
                     placingPhase: this.state.placingPhase,
                     userTurn: this.state.userTurn,
-                    onClick: this.reset
+                    onClick: this.reset,
+                    rotate: this.rotate,
+                    random: this.random
                 }),
-                React.createElement("button", { className: "rotate", onClick: this.rotate }),
                 React.createElement(
                     "div",
                     { id: "fleetContainer" },
@@ -301,9 +321,22 @@ function GameStatus(props) {
             React.createElement(
                 "button",
                 {
+                    className: "playAgain",
                     onClick: props.onClick
                 },
                 "Play again?"
+            )
+        );
+    } else if (props.placingPhase) {
+        return React.createElement(
+            "div",
+            { id: "status" },
+            status,
+            React.createElement(
+                "div",
+                null,
+                React.createElement("button", { className: "rotate", onClick: props.rotate }),
+                React.createElement("button", { className: "random", onClick: props.random })
             )
         );
     } else {
@@ -391,14 +424,18 @@ var Grid = function (_React$Component2) {
             // console.log(this.props.ships);
             if (this.props.playerName == "player1") {
                 if (!isNaN(parseFloat(this.props.board[i]))) {
+                    var orientation = " horizontal";
+                    // if(!this.props.horizontal) orientation = " vertical"
                     squareClass = "healthyShip mid";
                     var id = this.props.board[i].split(".");
                     // console.log(parseInt(this.props.ships[0].length)+2);
                     var shipNum = parseInt(id[0]);
                     var shipPos = parseInt(id[1]);
-                    var shipLength = parseInt(this.props.ships[shipNum].length);
+                    var shipLength = void 0;
+                    if (this.props.ships[shipNum]) shipLength = parseInt(this.props.ships[shipNum].length);
                     if (shipPos == 0) squareClass = "healthyShip first";
                     if (shipPos == shipLength - 1) squareClass = "healthyShip last";
+                    squareClass = squareClass + orientation;
                 }
             }
             if (this.props.playerName == "player2") {
