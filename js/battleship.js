@@ -26,7 +26,7 @@ const Gameboard = () => {
   const clearBoard = () => {
     board = Array(100).fill(null);
     index = 0;
-    ships = [];
+    ships.length = 0;
   }
 
   const place = (x, y, ship, horizontal) => {
