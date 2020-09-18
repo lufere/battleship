@@ -111,6 +111,7 @@ class Game extends React.Component{
             userTurn: true,
             placingPhase: true,
             shipCount: 0,
+            ships: player1.gameboard.ships,
         });
     }
 
@@ -151,7 +152,8 @@ class Game extends React.Component{
     }
 
     random(){
-        this.reset();
+        // if(this.state.shipCount>0)this.reset();
+        if(this.state.shipCount>0) player1.gameboard.clearBoard();
         // player1.gameboard.clearBoard();
         // this.setState({
         //     playerGrid: player1.gameboard.getBoard(),
@@ -160,12 +162,14 @@ class Game extends React.Component{
             e.style.display = "none";
         });
         player1.gameboard.randomSetup();
+        // player1.gameboard.place(6,1,Ship(4),true);
         this.setState({
             playerGrid: player1.gameboard.getBoard(),
             placingPhase:false,
-            playerGrid: player1.gameboard.getBoard(),
-        });
-        
+            ships: player1.gameboard.ships,
+        },()=>{
+            console.log(this.state.ships);
+        });  
     }
 
     render(){
@@ -185,7 +189,6 @@ class Game extends React.Component{
                         onClick = {this.handleClick}
                         onDrop = {this.drop}
                         ships = {this.state.ships}
-                        horizontal = {this.state.placingOrientation}
                     />
                     <Grid
                         playerName = {"player2"}
@@ -351,18 +354,20 @@ function Square(props) {
 
 class Grid extends React.Component{
     renderSquare(i) {
+        // let horizontal = this.props.horizontal;
         let squareClass = "water";
         // console.log(this.props.ships);
         if(this.props.playerName == "player1"){
             if(!isNaN(parseFloat(this.props.board[i]))){
                 let orientation = " horizontal"
-                // if(!this.props.horizontal) orientation = " vertical"
+                // if(horizontal) orientation = " vertical"
                 squareClass = "healthyShip mid";
                 let id = this.props.board[i].split(".");
                 // console.log(parseInt(this.props.ships[0].length)+2);
                 let shipNum = parseInt(id[0]);
                 let shipPos = parseInt(id[1]);
                 let shipLength;
+                if(this.props.ships[shipNum]&&this.props.ships[shipNum].horizontal==false) orientation = " vertical"
                 if(this.props.ships[shipNum]) shipLength = parseInt(this.props.ships[shipNum].length);
                 if(shipPos == 0) squareClass = "healthyShip first";
                 if (shipPos == shipLength-1) squareClass = "healthyShip last";

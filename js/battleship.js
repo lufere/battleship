@@ -1,5 +1,6 @@
 const Ship = (inputLength) => {
   let length;
+  let horizontal;
   if(inputLength > 5){length = 5} else if(inputLength < 2){length = 2;} else {length = inputLength;}
   let health = [];
   health = Array(length).fill(true);
@@ -9,7 +10,7 @@ const Ship = (inputLength) => {
   const isSunk = () => {
     return health.every(pos => pos == false)
   }
-  return{length, isSunk, health, hit}
+  return{length, isSunk, health, hit, horizontal}
 }
 
 const Gameboard = () => {
@@ -30,6 +31,7 @@ const Gameboard = () => {
 
   const place = (x, y, ship, horizontal) => {
     let valid = checkValidity(x, y, ship.length, horizontal);
+    ship.horizontal = horizontal;
     ships[index] = ship;
     let pos = x + (y * 10);
     if(valid==true){
@@ -66,7 +68,6 @@ const Gameboard = () => {
     randomPlace(Ship(3));
     randomPlace(Ship(4));
     randomPlace(Ship(5));
-
   }
 
   const checkValidity = (x, y, length, horizontal) => {

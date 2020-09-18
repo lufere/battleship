@@ -119,6 +119,23 @@ body, html{
     border-bottom-width: 3px;
 }
 
+.first.vertical{
+    border-left-width: 3px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+}
+
+.last.vertical{
+    border-right-width: 3px;
+    border-left-width: 3px;
+    border-bottom-width: 3px;
+}
+
+.mid.vertical{
+    border-left-width: 3px;
+    border-right-width: 3px;
+}
+
 .miss{
     background-color: rgb(21, 132, 201);
     /* background-color: black; */
