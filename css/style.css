@@ -258,3 +258,26 @@ h1 {
     transform:scale(1.15);
     cursor: pointer;
  }
+
+ @media screen and (max-width: 600px) {
+    .square{
+        height: 30px;
+        width: 30px;
+    }
+    
+    h1 {
+        font-size: 45px;
+    }
+ }
+
+ @media screen and (min-width: 600px) {
+    h1 {
+        font-size: 65px;
+    }
+ }
+
+ @media screen and (min-width: 1000px) {
+    h1 {
+        font-size: 100px;
+    }
+ }

@@ -215,46 +215,82 @@ var Game = function (_React$Component) {
                     onClick: this.chooseMode
                 });
             }
-            return React.createElement(
-                "div",
-                null,
-                React.createElement(
+            if (this.state.placingPhase) {
+                return React.createElement(
                     "div",
-                    { id: "boards" },
-                    React.createElement(Grid, {
-                        playerName: "player1",
-                        board: this.state.playerGrid,
-                        onClick: this.handleClick,
-                        onDrop: this.drop,
-                        ships: this.state.ships
+                    null,
+                    React.createElement(
+                        "div",
+                        { id: "boards" },
+                        React.createElement(Grid, {
+                            playerName: "player1",
+                            board: this.state.playerGrid,
+                            onClick: this.handleClick,
+                            onDrop: this.drop,
+                            ships: this.state.ships
+                        })
+                    ),
+                    React.createElement(GameStatus, {
+                        gameEnd: this.state.gameEnd,
+                        winner: this.state.winner,
+                        placingPhase: this.state.placingPhase,
+                        userTurn: this.state.userTurn,
+                        onClick: this.reset,
+                        rotate: this.rotate,
+                        random: this.random
                     }),
-                    React.createElement(Grid, {
-                        playerName: "player2",
-                        board: this.state.cpuGrid,
-                        onClick: this.handleClick,
-                        onDrop: this.disabledDrop,
-                        ships: this.state.cpuShips
-                    })
-                ),
-                React.createElement(GameStatus, {
-                    gameEnd: this.state.gameEnd,
-                    winner: this.state.winner,
-                    placingPhase: this.state.placingPhase,
-                    userTurn: this.state.userTurn,
-                    onClick: this.reset,
-                    rotate: this.rotate,
-                    random: this.random
-                }),
-                React.createElement(
+                    React.createElement(
+                        "div",
+                        { id: "fleetContainer" },
+                        React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation }),
+                        React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation }),
+                        React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation }),
+                        React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation }),
+                        React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation })
+                    )
+                );
+            } else {
+                return React.createElement(
                     "div",
-                    { id: "fleetContainer" },
-                    React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation }),
-                    React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation }),
-                    React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation }),
-                    React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation }),
-                    React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation })
-                )
-            );
+                    null,
+                    React.createElement(
+                        "div",
+                        { id: "boards" },
+                        React.createElement(Grid, {
+                            playerName: "player1",
+                            board: this.state.playerGrid,
+                            onClick: this.handleClick,
+                            onDrop: this.drop,
+                            ships: this.state.ships
+                        }),
+                        React.createElement(Grid, {
+                            playerName: "player2",
+                            board: this.state.cpuGrid,
+                            onClick: this.handleClick,
+                            onDrop: this.disabledDrop,
+                            ships: this.state.cpuShips
+                        })
+                    ),
+                    React.createElement(GameStatus, {
+                        gameEnd: this.state.gameEnd,
+                        winner: this.state.winner,
+                        placingPhase: this.state.placingPhase,
+                        userTurn: this.state.userTurn,
+                        onClick: this.reset,
+                        rotate: this.rotate,
+                        random: this.random
+                    }),
+                    React.createElement(
+                        "div",
+                        { id: "fleetContainer" },
+                        React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation }),
+                        React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation }),
+                        React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation }),
+                        React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation }),
+                        React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation })
+                    )
+                );
+            }
         }
     }]);
 
@@ -540,7 +576,9 @@ var Grid = function (_React$Component2) {
 }(React.Component);
 
 var domContainer = document.querySelector('#game');
-ReactDOM.render(React.createElement(Game, null), domContainer);
+ReactDOM.render(React.createElement(Game, {
+    onDrop: this.disabledDrop
+}), domContainer);
 
 var ztxt = new Ztextify(".hero-text", {
     depth: "30px",

@@ -180,43 +180,76 @@ class Game extends React.Component{
                 />
             )
         }
-        return(
-            <div>
-                <div id = "boards">
-                    <Grid
-                        playerName = {"player1"}
-                        board = {this.state.playerGrid}
-                        onClick = {this.handleClick}
-                        onDrop = {this.drop}
-                        ships = {this.state.ships}
+        if(this.state.placingPhase){
+            return(
+                <div>
+                    <div id = "boards">
+                        <Grid
+                            playerName = {"player1"}
+                            board = {this.state.playerGrid}
+                            onClick = {this.handleClick}
+                            onDrop = {this.drop}
+                            ships = {this.state.ships}
+                        />
+                    </div>
+                    <GameStatus
+                        gameEnd = {this.state.gameEnd}
+                        winner = {this.state.winner}
+                        placingPhase = {this.state.placingPhase}
+                        userTurn = {this.state.userTurn}
+                        onClick = {this.reset}
+                        rotate = {this.rotate}
+                        random = {this.random}
                     />
-                    <Grid
-                        playerName = {"player2"}
-                        board = {this.state.cpuGrid}
-                        onClick = {this.handleClick}
-                        onDrop = {this.disabledDrop}
-                        ships = {this.state.cpuShips}
+                    {/* <button className = {"rotate"} onClick = {this.rotate}></button> */}
+                    <div id = "fleetContainer">
+                        <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {3} id = {"3"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {4} id = {"4"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {5} id = {"5"} horizontal = {this.state.placingOrientation}/>
+                    </div>
+                </div>
+            ); 
+        }else{
+            return(
+                <div>
+                    <div id = "boards">
+                        <Grid
+                            playerName = {"player1"}
+                            board = {this.state.playerGrid}
+                            onClick = {this.handleClick}
+                            onDrop = {this.drop}
+                            ships = {this.state.ships}
+                        />
+                        <Grid
+                            playerName = {"player2"}
+                            board = {this.state.cpuGrid}
+                            onClick = {this.handleClick}
+                            onDrop = {this.disabledDrop}
+                            ships = {this.state.cpuShips}
+                        />
+                    </div>
+                    <GameStatus
+                        gameEnd = {this.state.gameEnd}
+                        winner = {this.state.winner}
+                        placingPhase = {this.state.placingPhase}
+                        userTurn = {this.state.userTurn}
+                        onClick = {this.reset}
+                        rotate = {this.rotate}
+                        random = {this.random}
                     />
+                    {/* <button className = {"rotate"} onClick = {this.rotate}></button> */}
+                    <div id = "fleetContainer">
+                        <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {3} id = {"3"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {4} id = {"4"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {5} id = {"5"} horizontal = {this.state.placingOrientation}/>
+                    </div>
                 </div>
-                <GameStatus
-                    gameEnd = {this.state.gameEnd}
-                    winner = {this.state.winner}
-                    placingPhase = {this.state.placingPhase}
-                    userTurn = {this.state.userTurn}
-                    onClick = {this.reset}
-                    rotate = {this.rotate}
-                    random = {this.random}
-                />
-                {/* <button className = {"rotate"} onClick = {this.rotate}></button> */}
-                <div id = "fleetContainer">
-                    <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation}/>
-                    <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation}/>
-                    <Fleet length = {3} id = {"3"} horizontal = {this.state.placingOrientation}/>
-                    <Fleet length = {4} id = {"4"} horizontal = {this.state.placingOrientation}/>
-                    <Fleet length = {5} id = {"5"} horizontal = {this.state.placingOrientation}/>
-                </div>
-            </div>
-        );
+            );
+        }
     }
 }
 
@@ -440,7 +473,9 @@ class Grid extends React.Component{
 }
 
 let domContainer = document.querySelector('#game');
-ReactDOM.render(<Game/>, domContainer);
+ReactDOM.render(<Game
+    onDrop = {this.disabledDrop}
+/>, domContainer);
 
 var ztxt = new Ztextify(".hero-text", {
     depth: "30px",
