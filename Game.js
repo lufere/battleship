@@ -17,12 +17,6 @@ var Game = function (_React$Component) {
     function Game(props) {
         _classCallCheck(this, Game);
 
-        // player1.gameboard.place(0,0,Ship(3),true);
-        // CPU.gameboard.place(0,0,Ship(3),true);
-        // player1.gameboard.place(2,2,Ship(4),false);
-        // player1.gameboard.place(4,7,Ship(4),true);
-        // player1.gameboard.place(6,1,Ship(4),false);
-        // player1.gameboard.randomSetup();
         var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
         CPU.gameboard.randomSetup();
@@ -50,7 +44,8 @@ var Game = function (_React$Component) {
             menu: true,
             ships: player1.gameboard.ships,
             cpuShips: CPU.gameboard.ships,
-            placingOrientation: true
+            placingOrientation: true,
+            lastPlaced: null
         };
         return _this;
     }
@@ -153,12 +148,20 @@ var Game = function (_React$Component) {
             if (valid) this.setState({
                 playerGrid: player1.gameboard.getBoard(),
                 shipCount: this.state.shipCount + 1,
-                ships: player1.gameboard.ships
+                ships: player1.gameboard.ships,
+                lastPlaced: ship_id
             }, function () {
                 if (_this3.state.shipCount == 5) _this3.setState({ placingPhase: false });
                 console.log(_this3.state.ships);
             });
             // if(this.state.shipCount == 5) this.setState({placingPhase:false});
+        }
+    }, {
+        key: "invalidDrop",
+        value: function invalidDrop(e) {
+            var ship_id = e.dataTransfer.getData('ship_id');
+            console.log(ship_id);
+            document.getElementById(ship_id).style.display = "flex";
         }
     }, {
         key: "disabledDrop",
@@ -242,11 +245,11 @@ var Game = function (_React$Component) {
                     React.createElement(
                         "div",
                         { id: "fleetContainer" },
-                        React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation }),
-                        React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation }),
-                        React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation }),
-                        React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation }),
-                        React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation })
+                        React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation, lastPlaced: this.state.lastPlaced }),
+                        React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation, lastPlaced: this.state.lastPlaced }),
+                        React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation, lastPlaced: this.state.lastPlaced }),
+                        React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation, lastPlaced: this.state.lastPlaced }),
+                        React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation, lastPlaced: this.state.lastPlaced })
                     )
                 );
             } else {
@@ -279,16 +282,7 @@ var Game = function (_React$Component) {
                         onClick: this.reset,
                         rotate: this.rotate,
                         random: this.random
-                    }),
-                    React.createElement(
-                        "div",
-                        { id: "fleetContainer" },
-                        React.createElement(Fleet, { length: 2, id: "1", horizontal: this.state.placingOrientation }),
-                        React.createElement(Fleet, { length: 3, id: "2", horizontal: this.state.placingOrientation }),
-                        React.createElement(Fleet, { length: 3, id: "3", horizontal: this.state.placingOrientation }),
-                        React.createElement(Fleet, { length: 4, id: "4", horizontal: this.state.placingOrientation }),
-                        React.createElement(Fleet, { length: 5, id: "5", horizontal: this.state.placingOrientation })
-                    )
+                    })
                 );
             }
         }
@@ -403,6 +397,11 @@ function Fleet(props) {
         }, 0);
     }
 
+    function dragEnd(e) {
+        var target = e.target;
+        if (target.id != props.lastPlaced) target.style.display = "flex";
+    }
+
     var shipBody = [];
     for (var i = 0; i < props.length; i++) {
         var shipClass = "square healthyShip";
@@ -429,6 +428,7 @@ function Fleet(props) {
             draggable: true,
             onDragStart: dragStart,
             onDragOver: dragOver,
+            onDragEnd: dragEnd,
             className: orientationClass
         },
         shipBody
@@ -576,9 +576,7 @@ var Grid = function (_React$Component2) {
 }(React.Component);
 
 var domContainer = document.querySelector('#game');
-ReactDOM.render(React.createElement(Game, {
-    onDrop: this.disabledDrop
-}), domContainer);
+ReactDOM.render(React.createElement(Game, null), domContainer);
 
 var ztxt = new Ztextify(".hero-text", {
     depth: "30px",

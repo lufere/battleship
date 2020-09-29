@@ -4,12 +4,6 @@ let CPU = Player(Gameboard());
 class Game extends React.Component{
     constructor(props){
         super(props);
-        // player1.gameboard.place(0,0,Ship(3),true);
-        // CPU.gameboard.place(0,0,Ship(3),true);
-        // player1.gameboard.place(2,2,Ship(4),false);
-        // player1.gameboard.place(4,7,Ship(4),true);
-        // player1.gameboard.place(6,1,Ship(4),false);
-        // player1.gameboard.randomSetup();
         CPU.gameboard.randomSetup();
         // CPU.gameboard.clearBoard();
         // this.receiveAttack = player1.gameboard.receiveAttack.bind(this);
@@ -36,6 +30,7 @@ class Game extends React.Component{
                 ships: player1.gameboard.ships,
                 cpuShips: CPU.gameboard.ships,
                 placingOrientation: true,
+                lastPlaced: null,
         };
     }
 
@@ -126,11 +121,18 @@ class Game extends React.Component{
             playerGrid: player1.gameboard.getBoard(),
             shipCount: this.state.shipCount + 1,
             ships: player1.gameboard.ships,
+            lastPlaced: ship_id,
         },()=>{
             if(this.state.shipCount == 5) this.setState({placingPhase:false});
             console.log(this.state.ships);
         });
         // if(this.state.shipCount == 5) this.setState({placingPhase:false});
+    }
+
+    invalidDrop(e){
+        let ship_id = e.dataTransfer.getData('ship_id');
+        console.log(ship_id);
+        document.getElementById(ship_id).style.display = "flex";
     }
 
     disabledDrop(e){
@@ -203,11 +205,11 @@ class Game extends React.Component{
                     />
                     {/* <button className = {"rotate"} onClick = {this.rotate}></button> */}
                     <div id = "fleetContainer">
-                        <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation}/>
-                        <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation}/>
-                        <Fleet length = {3} id = {"3"} horizontal = {this.state.placingOrientation}/>
-                        <Fleet length = {4} id = {"4"} horizontal = {this.state.placingOrientation}/>
-                        <Fleet length = {5} id = {"5"} horizontal = {this.state.placingOrientation}/>
+                        <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation} lastPlaced = {this.state.lastPlaced}/>
+                        <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation} lastPlaced = {this.state.lastPlaced}/>
+                        <Fleet length = {3} id = {"3"} horizontal = {this.state.placingOrientation} lastPlaced = {this.state.lastPlaced}/>
+                        <Fleet length = {4} id = {"4"} horizontal = {this.state.placingOrientation} lastPlaced = {this.state.lastPlaced}/>
+                        <Fleet length = {5} id = {"5"} horizontal = {this.state.placingOrientation} lastPlaced = {this.state.lastPlaced}/>
                     </div>
                 </div>
             ); 
@@ -240,13 +242,6 @@ class Game extends React.Component{
                         random = {this.random}
                     />
                     {/* <button className = {"rotate"} onClick = {this.rotate}></button> */}
-                    <div id = "fleetContainer">
-                        <Fleet length = {2} id = {"1"} horizontal = {this.state.placingOrientation}/>
-                        <Fleet length = {3} id = {"2"} horizontal = {this.state.placingOrientation}/>
-                        <Fleet length = {3} id = {"3"} horizontal = {this.state.placingOrientation}/>
-                        <Fleet length = {4} id = {"4"} horizontal = {this.state.placingOrientation}/>
-                        <Fleet length = {5} id = {"5"} horizontal = {this.state.placingOrientation}/>
-                    </div>
                 </div>
             );
         }
@@ -328,6 +323,11 @@ function Fleet(props){
         }, 0);
     }
 
+    function dragEnd(e){
+        const target = e.target;
+        if(target.id != props.lastPlaced) target.style.display = "flex";
+    }
+
     let shipBody = [];
     for (let i = 0; i < props.length; i++) {
         let shipClass = "square healthyShip";
@@ -356,6 +356,7 @@ function Fleet(props){
             draggable = {true}
             onDragStart = {dragStart}
             onDragOver = {dragOver}
+            onDragEnd = {dragEnd}
             className={orientationClass}
         >
         {shipBody}
@@ -473,9 +474,7 @@ class Grid extends React.Component{
 }
 
 let domContainer = document.querySelector('#game');
-ReactDOM.render(<Game
-    onDrop = {this.disabledDrop}
-/>, domContainer);
+ReactDOM.render(<Game/>, domContainer);
 
 var ztxt = new Ztextify(".hero-text", {
     depth: "30px",
